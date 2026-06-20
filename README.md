@@ -21,10 +21,18 @@ the conventions of [`rgbif`](https://docs.ropensci.org/rgbif/) and
 
 ## Installation
 
+Install the development version from GitHub:
+
 ``` r
 # install.packages("pak")
 pak::pak("CatalogueOfLife/rcol")
+
+# or
+# install.packages("remotes")
+remotes::install_github("CatalogueOfLife/rcol")
 ```
+
+Documentation is published at <https://catalogueoflife.github.io/rcol/>.
 
 ## Quick start
 
