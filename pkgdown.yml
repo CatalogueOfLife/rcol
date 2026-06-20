@@ -1,0 +1,9 @@
+pandoc: 3.8.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  rcol: rcol.html
+last_built: 2026-06-20T13:18Z
+urls:
+  reference: https://catalogueoflife.github.io/rcol/reference
+  article: https://catalogueoflife.github.io/rcol/articles
