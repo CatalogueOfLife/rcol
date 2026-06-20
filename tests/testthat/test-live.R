@@ -13,6 +13,19 @@ test_that("name matching works against a fixed COL release", {
   expect_match(res$name, "Panthera leo")
 })
 
+test_that("col_match resolves the latest release and matches", {
+  skip_on_cran()
+  skip_if_offline("api.checklistbank.org")
+  withr::defer(col_cache_clear())
+
+  col_cache_clear()
+  res <- col_match("Panthera leo")
+  expect_s3_class(res, "tbl_df")
+  expect_true(res$match)
+  expect_match(res$name, "Panthera leo")
+  expect_type(col_key(), "integer")
+})
+
 test_that("name parsing atomises a name", {
   skip_on_cran()
   skip_if_offline("api.checklistbank.org")

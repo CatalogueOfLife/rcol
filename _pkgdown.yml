@@ -4,8 +4,16 @@ template:
   bootstrap: 5
 
 reference:
+- title: Catalogue of Life shortcuts
+  desc: >
+    Convenience functions that always target the latest extended COL release,
+    pinned to a fixed key for the session.
+  contents:
+  - col_shortcuts
+  - col_key
+  - col_refresh
 - title: Name matching
-  desc: Match scientific names against a dataset or COL release.
+  desc: Match scientific names against any dataset or COL release.
   contents:
   - clb_match
   - clb_match_verbose

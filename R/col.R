@@ -1,5 +1,67 @@
 # Catalogue of Life release discovery ----------------------------------------
 
+# Session state: the resolved integer key of the pinned COL release.
+.rcol_state <- new.env(parent = emptyenv())
+
+#' The pinned Catalogue of Life release key
+#'
+#' Resolves the latest monthly extended Catalogue of Life release (the `"3LXR"`
+#' alias) to its concrete integer dataset key and caches it for the rest of the
+#' session. All `col_*()` convenience functions use this key, so a new release
+#' published mid-session will not silently change the data you are working
+#' against during a long-running job. Call [col_refresh()] to re-resolve.
+#'
+#' @param refresh Logical. Force re-resolution of the latest release even if a
+#'   key is already cached.
+#'
+#' @return The integer dataset key of the pinned COL extended release.
+#' @seealso [col_refresh()], [clb_col_release()]
+#' @export
+#' @examples
+#' \dontrun{
+#' col_key()
+#' }
+col_key <- function(refresh = FALSE) {
+  if (isTRUE(refresh) || is.null(.rcol_state$col_key)) {
+    d <- clb_get("dataset", "3LXR")
+    key <- d$key
+    if (is.null(key)) {
+      cli::cli_abort("Could not resolve the latest COL extended release ({.val 3LXR}).")
+    }
+    .rcol_state$col_key <- as.integer(key)
+    .rcol_state$col_alias <- d$alias %||% NA_character_
+  }
+  .rcol_state$col_key
+}
+
+#' Re-pin the Catalogue of Life release
+#'
+#' Re-resolves the latest extended COL release and updates the key cached by
+#' [col_key()]. Use this to pick up a newly published release within a running
+#' session.
+#'
+#' @return The integer dataset key of the newly pinned release, invisibly.
+#' @seealso [col_key()]
+#' @export
+#' @examples
+#' \dontrun{
+#' col_refresh()
+#' }
+col_refresh <- function() {
+  col_key(refresh = TRUE)
+  cli::cli_inform(
+    "Pinned COL to {.val {.rcol_state$col_alias}} (dataset {.val {.rcol_state$col_key}})."
+  )
+  invisible(.rcol_state$col_key)
+}
+
+# Internal: drop the cached key (used by tests).
+col_cache_clear <- function() {
+  .rcol_state$col_key <- NULL
+  .rcol_state$col_alias <- NULL
+  invisible(NULL)
+}
+
 #' Resolve a Catalogue of Life release
 #'
 #' The Catalogue of Life is published as a managed project (dataset key `3`)

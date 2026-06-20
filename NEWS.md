@@ -1,6 +1,10 @@
 # rcol 0.1.0
 
 * Initial release.
+* `col_*()` shortcut functions (`col_match()`, `col_usage()`, `col_tree()`, ...)
+  that always target the latest extended COL release without a `dataset`
+  argument. The release is resolved once to its integer key and pinned for the
+  session via `col_key()`; `col_refresh()` re-pins to a newer release.
 * Name matching against any dataset or COL release: `clb_match()`,
   `clb_match_verbose()`, `clb_match_checklist()`.
 * COL release discovery: `clb_col_release()`, `clb_col_releases()` covering the
