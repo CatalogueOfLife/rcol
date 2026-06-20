@@ -10,6 +10,20 @@ ChecklistBank or the latest Catalogue of Life release. It is modelled on
 the conventions of [`rgbif`](https://docs.ropensci.org/rgbif/) and
 [`taxadb`](https://docs.ropensci.org/taxadb/).
 
+There are two parallel families of functions:
+
+- **`clb_*()`** work against **any** dataset and take a `dataset =`
+  argument.
+- **`col_*()`** are convenience siblings that always target the **latest
+  extended Catalogue of Life release** and drop the `dataset` argument.
+  On first use the release alias `"3LXR"` is resolved to its concrete
+  integer key and pinned for the rest of the session (via
+  [`col_key()`](https://catalogueoflife.github.io/rcol/reference/col_key.md)),
+  so a release published mid-session never changes the data under a
+  long-running job. Call
+  [`col_refresh()`](https://catalogueoflife.github.io/rcol/reference/col_refresh.md)
+  to pick up a new release on purpose.
+
 ## Installation
 
 Install the development version from GitHub:
@@ -32,27 +46,42 @@ Documentation is published at <https://catalogueoflife.github.io/rcol/>.
 
 library(rcol)
 
-# Match a name against the latest extended COL release (the default dataset)
-clb_match("Panthera leo")
+# Match a name against the latest Catalogue of Life release
+col_match("Panthera leo")
 
-# Match many names at once
-clb_match_checklist(c("Panthera leo", "Bufo bufo", "Abies alba"))
+# Disambiguate with rank and nomenclatural code
+col_match("Abies alba", rank = "species", code = "botanical")
+
+# See all candidate matches, not just the best one
+col_match_verbose("Oenanthe")
+
+# Match many names at once (issued in parallel)
+col_match_checklist(c("Panthera leo", "Bufo bufo", "Abies alba"))
 
 # Parse a scientific name into its components
 clb_parse_name("Abies alba Mill.")
+```
+
+To match against a specific dataset instead of the latest COL release,
+use the `clb_*()` form with a `dataset =` key or alias:
+
+``` r
+
+clb_match("Felis catus", dataset = "COL25")          # the 2025 annual release
+clb_match("Macrocystis pyrifera", dataset = 2099)    # any public dataset by key
 ```
 
 ## Catalogue of Life releases
 
 The Catalogue of Life is published in two cadences (monthly and annual)
 and two flavours (a base release and an extended release `XR`). Every
-function takes a `dataset =` argument; helpful aliases resolve to the
-latest of each:
+`clb_*()` function takes a `dataset =` argument; helpful aliases resolve
+to the latest of each:
 
 ``` r
 
 clb_col_release("monthly")                  # "3LR"   latest monthly base
-clb_col_release("monthly", extended = TRUE) # "3LXR"  latest monthly extended (default)
+clb_col_release("monthly", extended = TRUE) # "3LXR"  latest monthly extended
 clb_col_release("annual")                   # e.g. "COL25"
 
 clb_usage_search("Felidae", dataset = "COL25")
@@ -60,50 +89,44 @@ clb_usage_search("Felidae", dataset = "COL25")
 
 ## Datasets, taxa & tree
 
+The `col_*()` shortcuts work against the latest COL release:
+
 ``` r
 
-# Search datasets
+# Search datasets across all of ChecklistBank
 clb_dataset_search("reptile")
 
-# Walk the tree
-roots <- clb_tree(dataset = "3LR")
-clb_children(roots$id[1], dataset = "3LR")
+# Walk the COL tree
+roots <- col_tree()
+col_children(roots$id[1])
 
-# Classification and synonyms of a taxon
-clb_classification("4CGXP", dataset = "3LR")
-clb_synonyms("6DBT", dataset = "3LR")
+# Classification, synonyms and vernaculars of a taxon
+col_classification("4CGXP")
+col_synonyms("6DBT")
+col_vernacular(id = "4CGXP")
 
-# Metrics
-clb_dataset_metrics()
-clb_usage_metrics("4CGXP", dataset = "3LR")
+# Full-text search and metrics
+col_usage_search("Felidae")
+col_dataset_metrics()
+col_usage_metrics("4CGXP")
+```
+
+The same lookups against an explicit dataset use the `clb_*()` form:
+
+``` r
+
+clb_tree(dataset = "COL25")
+clb_classification("4CGXP", dataset = "COL25")
 ```
 
 ## Configuration
 
 The base URL defaults to the production API and can be redirected with
-the `CLB_BASE_URL` environment variable, e.g. to the development server
-or to a locally running [dockerized matching
-container](https://www.catalogueoflife.org/tools/matching):
+the `CLB_BASE_URL` environment variable, e.g. to the development server:
 
 ``` r
 
 Sys.setenv(CLB_BASE_URL = "https://api.dev.checklistbank.org")
-```
-
-### Offline name matching
-
-For high-volume or offline matching, the Catalogue of Life publishes
-[dockerized matching
-containers](https://www.catalogueoflife.org/tools/matching) that bundle
-a release and expose a matching service locally:
-
-``` sh
-docker run -p 8080:8080 docker.gbif.org/matching-ws:xcol-amd64-latest
-```
-
-``` r
-
-clb_match("Panthera leo", server = "http://localhost:8080")
 ```
 
 ## License
@@ -112,9 +135,35 @@ MIT © Catalogue of Life
 
 # Package index
 
+## Catalogue of Life shortcuts
+
+Convenience functions that always target the latest extended COL
+release, pinned to a fixed key for the session.
+
+- [`col_match()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_match_verbose()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_dataset()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_dataset_metrics()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_usage()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_usage_search()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_search()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_suggest()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_classification()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_synonyms()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_vernacular()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_usage_metrics()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_tree()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_children()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  : Catalogue of Life shortcuts
+- [`col_key()`](https://catalogueoflife.github.io/rcol/reference/col_key.md)
+  : The pinned Catalogue of Life release key
+- [`col_refresh()`](https://catalogueoflife.github.io/rcol/reference/col_refresh.md)
+  : Re-pin the Catalogue of Life release
+
 ## Name matching
 
-Match scientific names against a dataset or COL release.
+Match scientific names against any dataset or COL release.
 
 - [`clb_match()`](https://catalogueoflife.github.io/rcol/reference/clb_match.md)
   : Match a scientific name against a ChecklistBank dataset

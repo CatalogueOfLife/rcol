@@ -53,6 +53,13 @@
 <!-- badges: start -->
 
 <p><code>rcol</code> is an R client for the <a href="https://www.catalogueoflife.org" class="external-link">Catalogue of Life</a> via the <a href="https://www.checklistbank.org" class="external-link">ChecklistBank</a> API (<a href="https://api.checklistbank.org" class="external-link uri">https://api.checklistbank.org</a>). It lets you match scientific names, look up datasets, taxa and name usages, navigate the taxonomic tree, and run the ChecklistBank parsers — against <strong>any</strong> public dataset in ChecklistBank or the latest Catalogue of Life release. It is modelled on the conventions of <a href="https://docs.ropensci.org/rgbif/" class="external-link"><code>rgbif</code></a> and <a href="https://docs.ropensci.org/taxadb/" class="external-link"><code>taxadb</code></a>.</p>
+<p>There are two parallel families of functions:</p>
+<ul>
+<li>
+<strong><code>clb_*()</code></strong> work against <strong>any</strong> dataset and take a <code>dataset =</code> argument.</li>
+<li>
+<strong><code>col_*()</code></strong> are convenience siblings that always target the <strong>latest extended Catalogue of Life release</strong> and drop the <code>dataset</code> argument. On first use the release alias <code>"3LXR"</code> is resolved to its concrete integer key and pinned for the rest of the session (via <code><a href="reference/col_key.html">col_key()</a></code>), so a release published mid-session never changes the data under a long-running job. Call <code><a href="reference/col_refresh.html">col_refresh()</a></code> to pick up a new release on purpose.</li>
+</ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -72,22 +79,32 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/CatalogueOfLife/rcol" class="external-link">rcol</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Match a name against the latest extended COL release (the default dataset)</span></span>
-<span><span class="fu"><a href="reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Panthera leo"</span><span class="op">)</span></span>
+<span><span class="co"># Match a name against the latest Catalogue of Life release</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_match</a></span><span class="op">(</span><span class="st">"Panthera leo"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Match many names at once</span></span>
-<span><span class="fu"><a href="reference/clb_match_checklist.html">clb_match_checklist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Panthera leo"</span>, <span class="st">"Bufo bufo"</span>, <span class="st">"Abies alba"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Disambiguate with rank and nomenclatural code</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_match</a></span><span class="op">(</span><span class="st">"Abies alba"</span>, rank <span class="op">=</span> <span class="st">"species"</span>, code <span class="op">=</span> <span class="st">"botanical"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># See all candidate matches, not just the best one</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_match_verbose</a></span><span class="op">(</span><span class="st">"Oenanthe"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Match many names at once (issued in parallel)</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_match_checklist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Panthera leo"</span>, <span class="st">"Bufo bufo"</span>, <span class="st">"Abies alba"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Parse a scientific name into its components</span></span>
 <span><span class="fu"><a href="reference/clb_parse_name.html">clb_parse_name</a></span><span class="op">(</span><span class="st">"Abies alba Mill."</span><span class="op">)</span></span></code></pre></div>
+<p>To match against a specific dataset instead of the latest COL release, use the <code>clb_*()</code> form with a <code>dataset =</code> key or alias:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Felis catus"</span>, dataset <span class="op">=</span> <span class="st">"COL25"</span><span class="op">)</span>          <span class="co"># the 2025 annual release</span></span>
+<span><span class="fu"><a href="reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Macrocystis pyrifera"</span>, dataset <span class="op">=</span> <span class="fl">2099</span><span class="op">)</span>    <span class="co"># any public dataset by key</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="catalogue-of-life-releases">Catalogue of Life releases<a class="anchor" aria-label="anchor" href="#catalogue-of-life-releases"></a>
 </h2>
-<p>The Catalogue of Life is published in two cadences (monthly and annual) and two flavours (a base release and an extended release <code>XR</code>). Every function takes a <code>dataset =</code> argument; helpful aliases resolve to the latest of each:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>The Catalogue of Life is published in two cadences (monthly and annual) and two flavours (a base release and an extended release <code>XR</code>). Every <code>clb_*()</code> function takes a <code>dataset =</code> argument; helpful aliases resolve to the latest of each:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/clb_col_release.html">clb_col_release</a></span><span class="op">(</span><span class="st">"monthly"</span><span class="op">)</span>                  <span class="co"># "3LR"   latest monthly base</span></span>
-<span><span class="fu"><a href="reference/clb_col_release.html">clb_col_release</a></span><span class="op">(</span><span class="st">"monthly"</span>, extended <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># "3LXR"  latest monthly extended (default)</span></span>
+<span><span class="fu"><a href="reference/clb_col_release.html">clb_col_release</a></span><span class="op">(</span><span class="st">"monthly"</span>, extended <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># "3LXR"  latest monthly extended</span></span>
 <span><span class="fu"><a href="reference/clb_col_release.html">clb_col_release</a></span><span class="op">(</span><span class="st">"annual"</span><span class="op">)</span>                   <span class="co"># e.g. "COL25"</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/clb_usage_search.html">clb_usage_search</a></span><span class="op">(</span><span class="st">"Felidae"</span>, dataset <span class="op">=</span> <span class="st">"COL25"</span><span class="op">)</span></span></code></pre></div>
@@ -95,36 +112,35 @@
 <div class="section level2">
 <h2 id="datasets-taxa--tree">Datasets, taxa &amp; tree<a class="anchor" aria-label="anchor" href="#datasets-taxa--tree"></a>
 </h2>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Search datasets</span></span>
+<p>The <code>col_*()</code> shortcuts work against the latest COL release:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Search datasets across all of ChecklistBank</span></span>
 <span><span class="fu"><a href="reference/clb_dataset_search.html">clb_dataset_search</a></span><span class="op">(</span><span class="st">"reptile"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Walk the tree</span></span>
-<span><span class="va">roots</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/clb_tree.html">clb_tree</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/clb_children.html">clb_children</a></span><span class="op">(</span><span class="va">roots</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
+<span><span class="co"># Walk the COL tree</span></span>
+<span><span class="va">roots</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/col_shortcuts.html">col_tree</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_children</a></span><span class="op">(</span><span class="va">roots</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Classification and synonyms of a taxon</span></span>
-<span><span class="fu"><a href="reference/clb_classification.html">clb_classification</a></span><span class="op">(</span><span class="st">"4CGXP"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/clb_synonyms.html">clb_synonyms</a></span><span class="op">(</span><span class="st">"6DBT"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
+<span><span class="co"># Classification, synonyms and vernaculars of a taxon</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_classification</a></span><span class="op">(</span><span class="st">"4CGXP"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_synonyms</a></span><span class="op">(</span><span class="st">"6DBT"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_vernacular</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"4CGXP"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Metrics</span></span>
-<span><span class="fu"><a href="reference/clb_dataset_metrics.html">clb_dataset_metrics</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/clb_usage_metrics.html">clb_usage_metrics</a></span><span class="op">(</span><span class="st">"4CGXP"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Full-text search and metrics</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_usage_search</a></span><span class="op">(</span><span class="st">"Felidae"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_dataset_metrics</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/col_shortcuts.html">col_usage_metrics</a></span><span class="op">(</span><span class="st">"4CGXP"</span><span class="op">)</span></span></code></pre></div>
+<p>The same lookups against an explicit dataset use the <code>clb_*()</code> form:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/clb_tree.html">clb_tree</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"COL25"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/clb_classification.html">clb_classification</a></span><span class="op">(</span><span class="st">"4CGXP"</span>, dataset <span class="op">=</span> <span class="st">"COL25"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="configuration">Configuration<a class="anchor" aria-label="anchor" href="#configuration"></a>
 </h2>
-<p>The base URL defaults to the production API and can be redirected with the <code>CLB_BASE_URL</code> environment variable, e.g. to the development server or to a locally running <a href="https://www.catalogueoflife.org/tools/matching" class="external-link">dockerized matching container</a>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CLB_BASE_URL <span class="op">=</span> <span class="st">"https://api.dev.checklistbank.org"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="offline-name-matching">Offline name matching<a class="anchor" aria-label="anchor" href="#offline-name-matching"></a>
-</h3>
-<p>For high-volume or offline matching, the Catalogue of Life publishes <a href="https://www.catalogueoflife.org/tools/matching" class="external-link">dockerized matching containers</a> that bundle a release and expose a matching service locally:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-p</span> 8080:8080 docker.gbif.org/matching-ws:xcol-amd64-latest</span></code></pre></div>
+<p>The base URL defaults to the production API and can be redirected with the <code>CLB_BASE_URL</code> environment variable, e.g. to the development server:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Panthera leo"</span>, server <span class="op">=</span> <span class="st">"http://localhost:8080"</span><span class="op">)</span></span></code></pre></div>
-</div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CLB_BASE_URL <span class="op">=</span> <span class="st">"https://api.dev.checklistbank.org"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a>

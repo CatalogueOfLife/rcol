@@ -36,6 +36,8 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="rcol-010">rcol 0.1.0<a class="anchor" aria-label="anchor" href="#rcol-010"></a></h2><p class="text-muted">CRAN release: 2021-02-05</p>
 <ul><li>Initial release.</li>
+<li>
+<code>col_*()</code> shortcut functions (<code><a href="../reference/col_shortcuts.html">col_match()</a></code>, <code><a href="../reference/col_shortcuts.html">col_usage()</a></code>, <code><a href="../reference/col_shortcuts.html">col_tree()</a></code>, …) that always target the latest extended COL release without a <code>dataset</code> argument. The release is resolved once to its integer key and pinned for the session via <code><a href="../reference/col_key.html">col_key()</a></code>; <code><a href="../reference/col_refresh.html">col_refresh()</a></code> re-pins to a newer release.</li>
 <li>Name matching against any dataset or COL release: <code><a href="../reference/clb_match.html">clb_match()</a></code>, <code><a href="../reference/clb_match_verbose.html">clb_match_verbose()</a></code>, <code><a href="../reference/clb_match_checklist.html">clb_match_checklist()</a></code>.</li>
 <li>COL release discovery: <code><a href="../reference/clb_col_release.html">clb_col_release()</a></code>, <code><a href="../reference/clb_col_releases.html">clb_col_releases()</a></code> covering the monthly base (<code>3LR</code>), monthly extended (<code>3LXR</code>) and annual (<code>COL&lt;YY&gt;</code>) releases.</li>
 <li>Parsers: <code><a href="../reference/clb_parsers.html">clb_parsers()</a></code>, <code><a href="../reference/clb_parse_name.html">clb_parse_name()</a></code>, <code><a href="../reference/clb_parse.html">clb_parse()</a></code>.</li>

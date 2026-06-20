@@ -10,6 +10,27 @@ dataset in ChecklistBank.
 library(rcol)
 ```
 
+## Two function families
+
+Most functions come in two forms:
+
+- **`clb_*()`** take a `dataset =` argument and work against any
+  dataset.
+- **`col_*()`** drop that argument and always target the latest extended
+  COL release. The `"3LXR"` alias is resolved once to its integer
+  dataset key and cached for the session via
+  [`col_key()`](https://catalogueoflife.github.io/rcol/reference/col_key.md),
+  so long-running work is not disrupted by a new release being published
+  midway. Use
+  [`col_refresh()`](https://catalogueoflife.github.io/rcol/reference/col_refresh.md)
+  to deliberately re-pin to the newest release.
+
+``` r
+
+col_key()      # the pinned integer dataset key of the latest extended release
+col_refresh()  # re-resolve to the newest release
+```
+
 ## Choosing a dataset
 
 Almost every function takes a `dataset =` argument identifying which
@@ -40,27 +61,41 @@ The package default is `"3LXR"`, the latest monthly extended release.
 
 ## Matching names
 
-[`clb_match()`](https://catalogueoflife.github.io/rcol/reference/clb_match.md)
-returns the single best match — the COL analogue of GBIF’s name backbone
-matching:
+[`col_match()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+returns the single best match against the latest COL release — the COL
+analogue of GBIF’s name backbone matching. The match is done by the
+ChecklistBank API and returns a tidy one-row tibble with the matched
+usage, the match type and the taxonomic classification:
 
 ``` r
 
-clb_match("Panthera leo")
-clb_match("Abies alba", rank = "species", code = "botanical")
+col_match("Panthera leo")
+col_match("Abies alba", rank = "species", code = "botanical")
 ```
 
 Use
-[`clb_match_verbose()`](https://catalogueoflife.github.io/rcol/reference/clb_match_verbose.md)
+[`col_match_verbose()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
 to see all candidate usages, and
-[`clb_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/clb_match_checklist.md)
-to match a whole vector or data frame in parallel:
+[`col_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+to match a whole vector or data frame in parallel (input columns are
+echoed back with a `verbatim_` prefix):
 
 ``` r
 
-clb_match_verbose("Oenanthe")
+col_match_verbose("Oenanthe")
 
-clb_match_checklist(c("Panthera leo", "Bufo bufo", "Abies alba"))
+col_match_checklist(c("Panthera leo", "Bufo bufo", "Abies alba"))
+```
+
+To match against a particular dataset rather than the latest COL
+release, use
+[`clb_match()`](https://catalogueoflife.github.io/rcol/reference/clb_match.md)
+with a `dataset =` key or alias:
+
+``` r
+
+clb_match("Felis catus", dataset = "COL25")
+clb_match("Bellis perennis", dataset = 2099)
 ```
 
 ## Parsing
@@ -87,34 +122,36 @@ clb_dataset_metrics("COL25")
 
 ## Taxa and the tree
 
+Using the `col_*()` shortcuts against the latest COL release:
+
 ``` r
 
 # Look up a usage and its context
-clb_usage("4CGXP", dataset = "3LR")
-clb_classification("4CGXP", dataset = "3LR")
-clb_synonyms("6DBT", dataset = "3LR")
-clb_vernacular(id = "4CGXP", dataset = "3LR")
+col_usage("4CGXP")
+col_classification("4CGXP")
+col_synonyms("6DBT")
+col_vernacular(id = "4CGXP")
 
 # Navigate the tree
-roots <- clb_tree(dataset = "3LR")
-clb_children(roots$id[1], dataset = "3LR")
+roots <- col_tree()
+col_children(roots$id[1])
 
-# Full-text search
-clb_usage_search("Felidae", dataset = "3LR")
-clb_suggest("Panth", dataset = "3LR")
+# Full-text search and metrics
+col_usage_search("Felidae")
+col_suggest("Panth")
+col_usage_metrics("4CGXP")
 ```
+
+The dataset-scoped equivalents take a `dataset =` argument, e.g.
+`clb_usage("4CGXP", dataset = "COL25")` or
+`clb_tree(dataset = "COL25")`.
 
 ## Pointing at another server
 
-Set `CLB_BASE_URL` to target the development API, or pass `server =` to
-[`clb_match()`](https://catalogueoflife.github.io/rcol/reference/clb_match.md)
-to match against a locally running [dockerized matching
-container](https://www.catalogueoflife.org/tools/matching):
+Set `CLB_BASE_URL` to target a different ChecklistBank deployment, such
+as the development API:
 
 ``` r
 
 Sys.setenv(CLB_BASE_URL = "https://api.dev.checklistbank.org")
-
-# docker run -p 8080:8080 docker.gbif.org/matching-ws:xcol-amd64-latest
-clb_match("Panthera leo", server = "http://localhost:8080")
 ```

@@ -1,8 +1,34 @@
 # Package index
 
+## Catalogue of Life shortcuts
+
+Convenience functions that always target the latest extended COL
+release, pinned to a fixed key for the session.
+
+- [`col_match()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_match_verbose()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_dataset()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_dataset_metrics()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_usage()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_usage_search()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_search()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_suggest()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_classification()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_synonyms()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_vernacular()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_usage_metrics()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_tree()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_children()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  : Catalogue of Life shortcuts
+- [`col_key()`](https://catalogueoflife.github.io/rcol/reference/col_key.md)
+  : The pinned Catalogue of Life release key
+- [`col_refresh()`](https://catalogueoflife.github.io/rcol/reference/col_refresh.md)
+  : Re-pin the Catalogue of Life release
+
 ## Name matching
 
-Match scientific names against a dataset or COL release.
+Match scientific names against any dataset or COL release.
 
 - [`clb_match()`](https://catalogueoflife.github.io/rcol/reference/clb_match.md)
   : Match a scientific name against a ChecklistBank dataset

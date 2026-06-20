@@ -66,6 +66,26 @@ every other public dataset in ChecklistBank.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/CatalogueOfLife/rcol" class="external-link">rcol</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
+<h2 id="two-function-families">Two function families<a class="anchor" aria-label="anchor" href="#two-function-families"></a>
+</h2>
+<p>Most functions come in two forms:</p>
+<ul>
+<li>
+<strong><code>clb_*()</code></strong> take a <code>dataset =</code>
+argument and work against any dataset.</li>
+<li>
+<strong><code>col_*()</code></strong> drop that argument and always
+target the latest extended COL release. The <code>"3LXR"</code> alias is
+resolved once to its integer dataset key and cached for the session via
+<code><a href="../reference/col_key.html">col_key()</a></code>, so long-running work is not disrupted by a new
+release being published midway. Use <code><a href="../reference/col_refresh.html">col_refresh()</a></code> to
+deliberately re-pin to the newest release.</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/col_key.html">col_key</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># the pinned integer dataset key of the latest extended release</span></span>
+<span><span class="fu"><a href="../reference/col_refresh.html">col_refresh</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># re-resolve to the newest release</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="choosing-a-dataset">Choosing a dataset<a class="anchor" aria-label="anchor" href="#choosing-a-dataset"></a>
 </h2>
 <p>Almost every function takes a <code>dataset =</code> argument
@@ -82,7 +102,7 @@ flavours: a <strong>base</strong> release and an
 <strong>extended</strong> release (<code>XR</code>) that merges in
 additional data. <code><a href="../reference/clb_col_release.html">clb_col_release()</a></code> returns the right
 identifier:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_col_release.html">clb_col_release</a></span><span class="op">(</span><span class="st">"monthly"</span><span class="op">)</span>                  <span class="co"># "3LR"   latest monthly base release</span></span>
 <span><span class="fu"><a href="../reference/clb_col_release.html">clb_col_release</a></span><span class="op">(</span><span class="st">"monthly"</span>, extended <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># "3LXR"  latest monthly extended release</span></span>
 <span><span class="fu"><a href="../reference/clb_col_release.html">clb_col_release</a></span><span class="op">(</span><span class="st">"annual"</span><span class="op">)</span>                   <span class="co"># e.g. "COL25"</span></span>
@@ -95,25 +115,35 @@ extended release.</p>
 <div class="section level2">
 <h2 id="matching-names">Matching names<a class="anchor" aria-label="anchor" href="#matching-names"></a>
 </h2>
-<p><code><a href="../reference/clb_match.html">clb_match()</a></code> returns the single best match — the COL
-analogue of GBIF’s name backbone matching:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Panthera leo"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Abies alba"</span>, rank <span class="op">=</span> <span class="st">"species"</span>, code <span class="op">=</span> <span class="st">"botanical"</span><span class="op">)</span></span></code></pre></div>
-<p>Use <code><a href="../reference/clb_match_verbose.html">clb_match_verbose()</a></code> to see all candidate usages, and
-<code><a href="../reference/clb_match_checklist.html">clb_match_checklist()</a></code> to match a whole vector or data frame
-in parallel:</p>
+<p><code><a href="../reference/col_shortcuts.html">col_match()</a></code> returns the single best match against the
+latest COL release — the COL analogue of GBIF’s name backbone matching.
+The match is done by the ChecklistBank API and returns a tidy one-row
+tibble with the matched usage, the match type and the taxonomic
+classification:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_match_verbose.html">clb_match_verbose</a></span><span class="op">(</span><span class="st">"Oenanthe"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/col_shortcuts.html">col_match</a></span><span class="op">(</span><span class="st">"Panthera leo"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_match</a></span><span class="op">(</span><span class="st">"Abies alba"</span>, rank <span class="op">=</span> <span class="st">"species"</span>, code <span class="op">=</span> <span class="st">"botanical"</span><span class="op">)</span></span></code></pre></div>
+<p>Use <code><a href="../reference/col_shortcuts.html">col_match_verbose()</a></code> to see all candidate usages, and
+<code><a href="../reference/col_shortcuts.html">col_match_checklist()</a></code> to match a whole vector or data frame
+in parallel (input columns are echoed back with a <code>verbatim_</code>
+prefix):</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/col_shortcuts.html">col_match_verbose</a></span><span class="op">(</span><span class="st">"Oenanthe"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/clb_match_checklist.html">clb_match_checklist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Panthera leo"</span>, <span class="st">"Bufo bufo"</span>, <span class="st">"Abies alba"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_match_checklist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Panthera leo"</span>, <span class="st">"Bufo bufo"</span>, <span class="st">"Abies alba"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>To match against a particular dataset rather than the latest COL
+release, use <code><a href="../reference/clb_match.html">clb_match()</a></code> with a <code>dataset =</code> key
+or alias:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Felis catus"</span>, dataset <span class="op">=</span> <span class="st">"COL25"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Bellis perennis"</span>, dataset <span class="op">=</span> <span class="fl">2099</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="parsing">Parsing<a class="anchor" aria-label="anchor" href="#parsing"></a>
 </h2>
 <p>The ChecklistBank parsers are exposed too — the scientific name
 parser and all the controlled-value parsers:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_parse_name.html">clb_parse_name</a></span><span class="op">(</span><span class="st">"Abies alba Mill."</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/clb_parsers.html">clb_parsers</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -122,7 +152,7 @@ parser and all the controlled-value parsers:</p>
 <div class="section level2">
 <h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_dataset_search.html">clb_dataset_search</a></span><span class="op">(</span><span class="st">"mammal"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/clb_dataset.html">clb_dataset</a></span><span class="op">(</span><span class="st">"3LXR"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/clb_dataset_metrics.html">clb_dataset_metrics</a></span><span class="op">(</span><span class="st">"COL25"</span><span class="op">)</span></span></code></pre></div>
@@ -130,33 +160,34 @@ parser and all the controlled-value parsers:</p>
 <div class="section level2">
 <h2 id="taxa-and-the-tree">Taxa and the tree<a class="anchor" aria-label="anchor" href="#taxa-and-the-tree"></a>
 </h2>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>Using the <code>col_*()</code> shortcuts against the latest COL
+release:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look up a usage and its context</span></span>
-<span><span class="fu"><a href="../reference/clb_usage.html">clb_usage</a></span><span class="op">(</span><span class="st">"4CGXP"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/clb_classification.html">clb_classification</a></span><span class="op">(</span><span class="st">"4CGXP"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/clb_synonyms.html">clb_synonyms</a></span><span class="op">(</span><span class="st">"6DBT"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/clb_vernacular.html">clb_vernacular</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"4CGXP"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_usage</a></span><span class="op">(</span><span class="st">"4CGXP"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_classification</a></span><span class="op">(</span><span class="st">"4CGXP"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_synonyms</a></span><span class="op">(</span><span class="st">"6DBT"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_vernacular</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"4CGXP"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Navigate the tree</span></span>
-<span><span class="va">roots</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clb_tree.html">clb_tree</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/clb_children.html">clb_children</a></span><span class="op">(</span><span class="va">roots</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
+<span><span class="va">roots</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/col_shortcuts.html">col_tree</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_children</a></span><span class="op">(</span><span class="va">roots</span><span class="op">$</span><span class="va">id</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Full-text search</span></span>
-<span><span class="fu"><a href="../reference/clb_usage_search.html">clb_usage_search</a></span><span class="op">(</span><span class="st">"Felidae"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/clb_suggest.html">clb_suggest</a></span><span class="op">(</span><span class="st">"Panth"</span>, dataset <span class="op">=</span> <span class="st">"3LR"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Full-text search and metrics</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_usage_search</a></span><span class="op">(</span><span class="st">"Felidae"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_suggest</a></span><span class="op">(</span><span class="st">"Panth"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/col_shortcuts.html">col_usage_metrics</a></span><span class="op">(</span><span class="st">"4CGXP"</span><span class="op">)</span></span></code></pre></div>
+<p>The dataset-scoped equivalents take a <code>dataset =</code>
+argument, e.g. <code>clb_usage("4CGXP", dataset = "COL25")</code> or
+<code>clb_tree(dataset = "COL25")</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="pointing-at-another-server">Pointing at another server<a class="anchor" aria-label="anchor" href="#pointing-at-another-server"></a>
 </h2>
-<p>Set <code>CLB_BASE_URL</code> to target the development API, or pass
-<code>server =</code> to <code><a href="../reference/clb_match.html">clb_match()</a></code> to match against a
-locally running <a href="https://www.catalogueoflife.org/tools/matching" class="external-link">dockerized
-matching container</a>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CLB_BASE_URL <span class="op">=</span> <span class="st">"https://api.dev.checklistbank.org"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># docker run -p 8080:8080 docker.gbif.org/matching-ws:xcol-amd64-latest</span></span>
-<span><span class="fu"><a href="../reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Panthera leo"</span>, server <span class="op">=</span> <span class="st">"http://localhost:8080"</span><span class="op">)</span></span></code></pre></div>
+<p>Set <code>CLB_BASE_URL</code> to target a different ChecklistBank
+deployment, such as the development API:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CLB_BASE_URL <span class="op">=</span> <span class="st">"https://api.dev.checklistbank.org"</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

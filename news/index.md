@@ -5,6 +5,16 @@
 CRAN release: 2021-02-05
 
 - Initial release.
+- `col_*()` shortcut functions
+  ([`col_match()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md),
+  [`col_usage()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md),
+  [`col_tree()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md),
+  …) that always target the latest extended COL release without a
+  `dataset` argument. The release is resolved once to its integer key
+  and pinned for the session via
+  [`col_key()`](https://catalogueoflife.github.io/rcol/reference/col_key.md);
+  [`col_refresh()`](https://catalogueoflife.github.io/rcol/reference/col_refresh.md)
+  re-pins to a newer release.
 - Name matching against any dataset or COL release:
   [`clb_match()`](https://catalogueoflife.github.io/rcol/reference/clb_match.md),
   [`clb_match_verbose()`](https://catalogueoflife.github.io/rcol/reference/clb_match_verbose.md),
