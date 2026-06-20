@@ -79,7 +79,7 @@ clb_query <- function(...) {
 clb_get <- function(..., query = list(), base_url = clb_base_url()) {
   segments <- as.character(unlist(list(...)))
   req <- clb_request(base_url = base_url)
-  req <- httr2::req_url_path_append(req, !!!segments)
+  req <- do.call(httr2::req_url_path_append, c(list(req), as.list(segments)))
   if (length(query)) {
     req <- httr2::req_url_query(req, !!!query, .multi = "explode")
   }
@@ -102,7 +102,7 @@ clb_get <- function(..., query = list(), base_url = clb_base_url()) {
 #' @noRd
 clb_get_paged <- function(..., query = list(), limit = 50L, max = limit,
                           base_url = clb_base_url()) {
-  page_size <- min(limit, 1000L)
+  page_size <- min(limit, max, 1000L)
   offset <- 0L
   collected <- list()
   total <- NA_integer_
