@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   rcol: rcol.html
-last_built: 2026-06-20T13:18Z
+last_built: 2026-06-20T13:23Z
 urls:
   reference: https://catalogueoflife.github.io/rcol/reference
   article: https://catalogueoflife.github.io/rcol/articles
