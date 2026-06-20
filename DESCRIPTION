@@ -1,0 +1,40 @@
+Package: rcol
+Title: R Client for the Catalogue of Life / ChecklistBank API
+Version: 0.1.0
+Authors@R: c(
+    person("Markus", "Döring", , "mdoering@gbif.org", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-7757-1889")),
+    person("Catalogue of Life", role = c("cph", "fnd"))
+  )
+Description: Access the Catalogue of Life (COL) through the ChecklistBank
+    (CLB) web API <https://api.checklistbank.org>. Match scientific names
+    against any public dataset or the latest COL release, look up datasets,
+    taxa and name usages, navigate the taxonomic tree, run the ChecklistBank
+    name and value parsers, and discover the latest annual and monthly COL
+    base and extended releases. Modelled on the conventions of 'rgbif' and
+    'taxadb'.
+License: MIT + file LICENSE
+URL: https://github.com/CatalogueOfLife/rcol,
+    https://catalogueoflife.github.io/rcol/
+BugReports: https://github.com/CatalogueOfLife/rcol/issues
+Depends:
+    R (>= 4.1)
+Imports:
+    cli,
+    httr2 (>= 1.1.0),
+    rlang,
+    tibble,
+    utils
+Suggests:
+    httptest2,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    withr
+VignetteBuilder:
+    knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-GB
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2

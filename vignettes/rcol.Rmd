@@ -1,0 +1,120 @@
+---
+title: "Getting started with rcol"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with rcol}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+`rcol` wraps the [ChecklistBank](https://www.checklistbank.org) API to give R
+users idiomatic access to the [Catalogue of
+Life](https://www.catalogueoflife.org) (COL) and every other public dataset in
+ChecklistBank.
+
+```{r setup}
+library(rcol)
+```
+
+## Choosing a dataset
+
+Almost every function takes a `dataset =` argument identifying which checklist
+to work against. You can pass:
+
+* a numeric dataset key, e.g. `3` (the COL project),
+* a dataset alias such as `"COL25"` (the 2025 annual release), or
+* one of the *magic* COL release aliases that always resolve to the most recent
+  release.
+
+The COL is published in two cadences (monthly and annual) and two flavours: a
+**base** release and an **extended** release (`XR`) that merges in additional
+data. `clb_col_release()` returns the right identifier:
+
+```{r}
+clb_col_release("monthly")                  # "3LR"   latest monthly base release
+clb_col_release("monthly", extended = TRUE) # "3LXR"  latest monthly extended release
+clb_col_release("annual")                   # e.g. "COL25"
+
+# Every release, e.g. to find historical annual editions
+clb_col_releases()
+```
+
+The package default is `"3LXR"`, the latest monthly extended release.
+
+## Matching names
+
+`clb_match()` returns the single best match — the COL analogue of GBIF's name
+backbone matching:
+
+```{r}
+clb_match("Panthera leo")
+clb_match("Abies alba", rank = "species", code = "botanical")
+```
+
+Use `clb_match_verbose()` to see all candidate usages, and
+`clb_match_checklist()` to match a whole vector or data frame in parallel:
+
+```{r}
+clb_match_verbose("Oenanthe")
+
+clb_match_checklist(c("Panthera leo", "Bufo bufo", "Abies alba"))
+```
+
+## Parsing
+
+The ChecklistBank parsers are exposed too — the scientific name parser and all
+the controlled-value parsers:
+
+```{r}
+clb_parse_name("Abies alba Mill.")
+
+clb_parsers()
+clb_parse("rank", c("spec", "fam.", "ssp"))
+```
+
+## Datasets
+
+```{r}
+clb_dataset_search("mammal")
+clb_dataset("3LXR")
+clb_dataset_metrics("COL25")
+```
+
+## Taxa and the tree
+
+```{r}
+# Look up a usage and its context
+clb_usage("4CGXP", dataset = "3LR")
+clb_classification("4CGXP", dataset = "3LR")
+clb_synonyms("6DBT", dataset = "3LR")
+clb_vernacular(id = "4CGXP", dataset = "3LR")
+
+# Navigate the tree
+roots <- clb_tree(dataset = "3LR")
+clb_children(roots$id[1], dataset = "3LR")
+
+# Full-text search
+clb_usage_search("Felidae", dataset = "3LR")
+clb_suggest("Panth", dataset = "3LR")
+```
+
+## Pointing at another server
+
+Set `CLB_BASE_URL` to target the development API, or pass `server =` to
+`clb_match()` to match against a locally running
+[dockerized matching container](https://www.catalogueoflife.org/tools/matching):
+
+```{r}
+Sys.setenv(CLB_BASE_URL = "https://api.dev.checklistbank.org")
+
+# docker run -p 8080:8080 docker.gbif.org/matching-ws:xcol-amd64-latest
+clb_match("Panthera leo", server = "http://localhost:8080")
+```

@@ -1,0 +1,42 @@
+url: https://catalogueoflife.github.io/rcol/
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Name matching
+  desc: Match scientific names against a dataset or COL release.
+  contents:
+  - clb_match
+  - clb_match_verbose
+  - clb_match_checklist
+- title: Catalogue of Life releases
+  contents:
+  - clb_col_release
+  - clb_col_releases
+- title: Parsers
+  contents:
+  - clb_parsers
+  - clb_parse_name
+  - clb_parse
+- title: Datasets
+  contents:
+  - clb_dataset_search
+  - clb_dataset
+  - clb_dataset_metrics
+- title: Name usages & taxa
+  contents:
+  - clb_usage
+  - clb_usage_search
+  - clb_suggest
+  - clb_classification
+  - clb_synonyms
+  - clb_vernacular
+  - clb_usage_metrics
+- title: Tree navigation
+  contents:
+  - clb_tree
+  - clb_children
+- title: Configuration
+  contents:
+  - clb_base_url
