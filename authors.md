@@ -13,13 +13,13 @@ Source:
 [`DESCRIPTION`](https://github.com/CatalogueOfLife/rcol/blob/main/DESCRIPTION)
 
 Döring M (2026). *rcol: R Client for the Catalogue of Life /
-ChecklistBank API*. R package version 0.1.0,
+ChecklistBank API*. R package version 1.0.0,
 <https://github.com/CatalogueOfLife/rcol>.
 
     @Manual{,
       title = {rcol: R Client for the Catalogue of Life / ChecklistBank API},
       author = {Markus Döring},
       year = {2026},
-      note = {R package version 0.1.0},
+      note = {R package version 1.0.0},
       url = {https://github.com/CatalogueOfLife/rcol},
     }

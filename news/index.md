@@ -1,10 +1,10 @@
 # Changelog
 
-## rcol 0.1.0
+## rcol 1.0.0
 
-CRAN release: 2021-02-05
-
-- Initial release.
+- First release of the ChecklistBank-based client. It is unrelated to
+  the rOpenSci `rcol` package (versions 0.1.0 to 0.2.0, archived on CRAN
+  in 2022), which had a different API.
 - `col_*()` shortcut functions
   ([`col_match()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md),
   [`col_usage()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md),

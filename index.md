@@ -26,19 +26,24 @@ There are two parallel families of functions:
 
 ## Installation
 
-Install the development version from GitHub:
+Install the latest release from GitHub:
 
 ``` r
 
 # install.packages("pak")
-pak::pak("CatalogueOfLife/rcol")
+pak::pak("CatalogueOfLife/rcol@*release")
 
 # or
 # install.packages("remotes")
-remotes::install_github("CatalogueOfLife/rcol")
+remotes::install_github("CatalogueOfLife/rcol@*release")
 ```
 
+or the development version with `pak::pak("CatalogueOfLife/rcol")`.
+
 Documentation is published at <https://catalogueoflife.github.io/rcol/>.
+
+This package is not the rOpenSci `rcol` package that was archived on
+CRAN in 2022; `install.packages("rcol")` will not install it.
 
 ## Quick start
 
