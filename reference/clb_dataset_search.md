@@ -47,8 +47,7 @@ clb_dataset_search(
 
 ## Value
 
-A `clb` object whose `$data` is a
-[tibble](https://tibble.tidyverse.org/reference/tibble.html) of
+A [tibble](https://tibble.tidyverse.org/reference/tibble.html) of
 datasets, one row each, with columns such as `key`, `alias`, `title`,
 `type`, `origin`, `license` and `issued`.
 

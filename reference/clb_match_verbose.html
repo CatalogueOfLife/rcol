@@ -77,11 +77,14 @@ it separately via <code>authorship</code>.</p></dd>
 
 
 <dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
-<dd><p>Dataset key or alias to match against. Defaults to <code>"3LXR"</code>.</p></dd>
+<dd><p>Dataset key or alias to match against. Defaults to <code>"3LXR"</code>.
+See <code><a href="clb_col_release.html">clb_col_release()</a></code> for the COL release aliases.</p></dd>
 
 
 <dt id="arg-server">server<a class="anchor" aria-label="anchor" href="#arg-server"></a></dt>
-<dd><p>Optional base URL of an alternative matching service.</p></dd>
+<dd><p>Optional base URL of an alternative matching service, e.g. a
+locally running dockerized matching container
+(<code>"http://localhost:8080"</code>). Overrides <code>CLB_BASE_URL</code> for this call.</p></dd>
 
 
 <dt id="arg--raw">.raw<a class="anchor" aria-label="anchor" href="#arg--raw"></a></dt>
@@ -114,7 +117,7 @@ it separately via <code>authorship</code>.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

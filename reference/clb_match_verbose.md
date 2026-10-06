@@ -41,11 +41,15 @@ clb_match_verbose(
 
 - dataset:
 
-  Dataset key or alias to match against. Defaults to `"3LXR"`.
+  Dataset key or alias to match against. Defaults to `"3LXR"`. See
+  [`clb_col_release()`](https://catalogueoflife.github.io/rcol/reference/clb_col_release.md)
+  for the COL release aliases.
 
 - server:
 
-  Optional base URL of an alternative matching service.
+  Optional base URL of an alternative matching service, e.g. a locally
+  running dockerized matching container (`"http://localhost:8080"`).
+  Overrides `CLB_BASE_URL` for this call.
 
 - .raw:
 

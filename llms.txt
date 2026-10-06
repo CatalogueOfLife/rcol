@@ -146,12 +146,18 @@ release, pinned to a fixed key for the session.
   [`col_dataset()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_dataset_metrics()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_usage()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_usage_info()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_usage_search()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_search()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_suggest()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_classification()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_synonyms()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_vernacular()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_distribution()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_interaction()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_media()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_property()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  [`col_relation()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_usage_metrics()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_tree()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
   [`col_children()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
@@ -201,6 +207,8 @@ Match scientific names against any dataset or COL release.
 
 - [`clb_usage()`](https://catalogueoflife.github.io/rcol/reference/clb_usage.md)
   : Get a name usage (taxon or synonym) by id
+- [`clb_usage_info()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_info.md)
+  : Full information about a name usage
 - [`clb_usage_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md)
   [`clb_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md)
   : Full-text search of name usages
@@ -212,6 +220,16 @@ Match scientific names against any dataset or COL release.
   : Synonyms of a taxon
 - [`clb_vernacular()`](https://catalogueoflife.github.io/rcol/reference/clb_vernacular.md)
   : Vernacular (common) names
+- [`clb_distribution()`](https://catalogueoflife.github.io/rcol/reference/clb_distribution.md)
+  : Distributions of a taxon
+- [`clb_interaction()`](https://catalogueoflife.github.io/rcol/reference/clb_interaction.md)
+  : Species interactions of a taxon
+- [`clb_media()`](https://catalogueoflife.github.io/rcol/reference/clb_media.md)
+  : Media of a taxon
+- [`clb_property()`](https://catalogueoflife.github.io/rcol/reference/clb_property.md)
+  : Properties of a taxon
+- [`clb_relation()`](https://catalogueoflife.github.io/rcol/reference/clb_relation.md)
+  : Taxon concept relations of a taxon
 - [`clb_usage_metrics()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_metrics.md)
   : Metrics for a taxon
 

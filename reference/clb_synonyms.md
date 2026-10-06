@@ -1,6 +1,6 @@
 # Synonyms of a taxon
 
-Synonyms of a taxon.
+Synonyms of a taxon
 
 ## Usage
 
@@ -25,9 +25,9 @@ clb_synonyms(id, dataset = "3LXR", .raw = FALSE)
 ## Value
 
 A [tibble](https://tibble.tidyverse.org/reference/tibble.html) of
-synonym usages with a `synonym_type` column (`"homotypic"` or
-`"heterotypic"`) and the usual flattened usage columns. Zero rows when
-the taxon has no synonyms.
+synonym usages with a `synonym_type` column (`"homotypic"`,
+`"heterotypic"` or `"misapplied"`) and the usual flattened usage
+columns. Zero rows when the taxon has no synonyms.
 
 ## See also
 

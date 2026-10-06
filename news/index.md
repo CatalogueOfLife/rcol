@@ -34,6 +34,7 @@ CRAN release: 2021-02-05
   [`clb_dataset_metrics()`](https://catalogueoflife.github.io/rcol/reference/clb_dataset_metrics.md).
 - Name usages and taxa:
   [`clb_usage()`](https://catalogueoflife.github.io/rcol/reference/clb_usage.md),
+  [`clb_usage_info()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_info.md),
   [`clb_usage_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md)
   /
   [`clb_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md),
@@ -41,7 +42,18 @@ CRAN release: 2021-02-05
   [`clb_classification()`](https://catalogueoflife.github.io/rcol/reference/clb_classification.md),
   [`clb_synonyms()`](https://catalogueoflife.github.io/rcol/reference/clb_synonyms.md),
   [`clb_vernacular()`](https://catalogueoflife.github.io/rcol/reference/clb_vernacular.md),
+  [`clb_distribution()`](https://catalogueoflife.github.io/rcol/reference/clb_distribution.md),
+  [`clb_interaction()`](https://catalogueoflife.github.io/rcol/reference/clb_interaction.md),
+  [`clb_media()`](https://catalogueoflife.github.io/rcol/reference/clb_media.md),
+  [`clb_property()`](https://catalogueoflife.github.io/rcol/reference/clb_property.md),
+  [`clb_relation()`](https://catalogueoflife.github.io/rcol/reference/clb_relation.md),
   [`clb_usage_metrics()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_metrics.md).
+- [`clb_usage_info()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_info.md)
+  /
+  [`col_usage_info()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  return the full usage information document (usage, classification,
+  synonymy, vernacular names, distributions, references, …) in a single
+  request.
 - Tree navigation:
   [`clb_tree()`](https://catalogueoflife.github.io/rcol/reference/clb_tree.md),
   [`clb_children()`](https://catalogueoflife.github.io/rcol/reference/clb_children.md).

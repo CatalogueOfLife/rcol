@@ -1,6 +1,6 @@
 # Get a name usage (taxon or synonym) by id
 
-Get a name usage (taxon or synonym) by id.
+Get a name usage (taxon or synonym) by id
 
 ## Usage
 

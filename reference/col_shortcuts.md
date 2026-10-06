@@ -12,14 +12,33 @@ to re-pin).
 ## Usage
 
 ``` r
-col_match(name, authorship = NULL, rank = NULL, code = NULL,
-  server = NULL, .raw = FALSE)
+col_match(
+  name,
+  authorship = NULL,
+  rank = NULL,
+  code = NULL,
+  server = NULL,
+  .raw = FALSE
+)
 
-col_match_verbose(name, authorship = NULL, rank = NULL, code = NULL,
-  server = NULL, .raw = FALSE)
+col_match_verbose(
+  name,
+  authorship = NULL,
+  rank = NULL,
+  code = NULL,
+  server = NULL,
+  .raw = FALSE
+)
 
-col_match_checklist(data, name = "name", authorship = "authorship",
-  rank = "rank", code = "code", server = NULL, max_active = 5L)
+col_match_checklist(
+  data,
+  name = "name",
+  authorship = "authorship",
+  rank = "rank",
+  code = "code",
+  server = NULL,
+  max_active = 5L
+)
 
 col_dataset(.raw = FALSE)
 
@@ -27,11 +46,18 @@ col_dataset_metrics(.raw = FALSE)
 
 col_usage(id, .raw = FALSE)
 
-col_usage_search(q = NULL, rank = NULL, status = NULL, ..., limit = 50L,
-  max = limit)
+col_usage_info(id, .raw = FALSE)
 
-col_search(q = NULL, rank = NULL, status = NULL, ..., limit = 50L,
-  max = limit)
+col_usage_search(
+  q = NULL,
+  rank = NULL,
+  status = NULL,
+  ...,
+  limit = 50L,
+  max = limit
+)
+
+col_search(q = NULL, rank = NULL, status = NULL, ..., limit = 50L, max = limit)
 
 col_suggest(q, ..., .raw = FALSE)
 
@@ -39,16 +65,38 @@ col_classification(id, .raw = FALSE)
 
 col_synonyms(id, .raw = FALSE)
 
-col_vernacular(id = NULL, q = NULL, lang = NULL, ..., limit = 50L,
-  max = limit, .raw = FALSE)
+col_vernacular(
+  id = NULL,
+  q = NULL,
+  lang = NULL,
+  ...,
+  limit = 50L,
+  max = limit,
+  .raw = FALSE
+)
+
+col_distribution(id, .raw = FALSE)
+
+col_interaction(id, .raw = FALSE)
+
+col_media(id, .raw = FALSE)
+
+col_property(id, .raw = FALSE)
+
+col_relation(id, .raw = FALSE)
 
 col_usage_metrics(id, .raw = FALSE)
 
-col_tree(id = NULL, extinct = TRUE, ..., limit = 100L, max = limit,
-  .raw = FALSE)
+col_tree(
+  id = NULL,
+  extinct = TRUE,
+  ...,
+  limit = 100L,
+  max = limit,
+  .raw = FALSE
+)
 
-col_children(id, extinct = TRUE, ..., limit = 100L, max = limit,
-  .raw = FALSE)
+col_children(id, extinct = TRUE, ..., limit = 100L, max = limit, .raw = FALSE)
 ```
 
 ## Arguments
