@@ -1,6 +1,8 @@
-# rcol 0.1.0
+# rcol 1.0.0
 
-* Initial release.
+* First release of the ChecklistBank-based client. It is unrelated to the
+  rOpenSci `rcol` package (versions 0.1.0 to 0.2.0, archived on CRAN in 2022),
+  which had a different API.
 * `col_*()` shortcut functions (`col_match()`, `col_usage()`, `col_tree()`, ...)
   that always target the latest extended COL release without a `dataset`
   argument. The release is resolved once to its integer key and pinned for the

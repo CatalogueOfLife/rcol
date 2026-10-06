@@ -1,6 +1,6 @@
 Package: rcol
 Title: R Client for the Catalogue of Life / ChecklistBank API
-Version: 0.1.0
+Version: 1.0.0
 Authors@R: c(
     person("Markus", "Döring", , "mdoering@gbif.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7757-1889")),

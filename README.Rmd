@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/CatalogueOfLife/rcol/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CatalogueOfLife/rcol/actions/workflows/R-CMD-check.yaml)
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 `rcol` is an R client for the [Catalogue of Life](https://www.catalogueoflife.org)
@@ -42,18 +42,23 @@ There are two parallel families of functions:
 
 ## Installation
 
-Install the development version from GitHub:
+Install the latest release from GitHub:
 
 ```r
 # install.packages("pak")
-pak::pak("CatalogueOfLife/rcol")
+pak::pak("CatalogueOfLife/rcol@*release")
 
 # or
 # install.packages("remotes")
-remotes::install_github("CatalogueOfLife/rcol")
+remotes::install_github("CatalogueOfLife/rcol@*release")
 ```
 
+or the development version with `pak::pak("CatalogueOfLife/rcol")`.
+
 Documentation is published at <https://catalogueoflife.github.io/rcol/>.
+
+This package is not the rOpenSci `rcol` package that was archived on CRAN in
+2022; `install.packages("rcol")` will not install it.
 
 ## Quick start
 

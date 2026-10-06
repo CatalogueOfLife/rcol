@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # rcol
@@ -6,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/CatalogueOfLife/rcol/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CatalogueOfLife/rcol/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 `rcol` is an R client for the [Catalogue of
@@ -33,18 +34,23 @@ There are two parallel families of functions:
 
 ## Installation
 
-Install the development version from GitHub:
+Install the latest release from GitHub:
 
 ``` r
 # install.packages("pak")
-pak::pak("CatalogueOfLife/rcol")
+pak::pak("CatalogueOfLife/rcol@*release")
 
 # or
 # install.packages("remotes")
-remotes::install_github("CatalogueOfLife/rcol")
+remotes::install_github("CatalogueOfLife/rcol@*release")
 ```
 
+or the development version with `pak::pak("CatalogueOfLife/rcol")`.
+
 Documentation is published at <https://catalogueoflife.github.io/rcol/>.
+
+This package is not the rOpenSci `rcol` package that was archived on
+CRAN in 2022; `install.packages("rcol")` will not install it.
 
 ## Quick start
 
@@ -123,7 +129,7 @@ clb_classification("4CGXP", dataset = "COL25")
 ## Configuration
 
 The base URL defaults to the production API and can be redirected with
-the `CLB_BASE_URL` environment variable, e.g. to the development server:
+the `CLB_BASE_URL` environment variable, e.g. to the development server:
 
 ``` r
 Sys.setenv(CLB_BASE_URL = "https://api.dev.checklistbank.org")
