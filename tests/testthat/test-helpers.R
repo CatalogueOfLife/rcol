@@ -78,3 +78,23 @@ test_that("clb_as_usage_list flattens nested groups", {
   expect_length(flat, 3)
   expect_identical(vapply(flat, function(x) x$id, character(1)), c("1", "2", "3"))
 })
+
+test_that("clb_synonymy_to_tibble ignores heterotypicGroups and tags misapplied", {
+  syn <- function(id) list(id = id, status = "synonym",
+                           name = list(scientificName = paste("Aus", id)))
+  tb <- clb_synonymy_to_tibble(list(
+    homotypic = list(syn("H1")),
+    heterotypic = list(syn("S1"), syn("S2")),
+    heterotypicGroups = list(list(syn("S1")), list(syn("S2"))),
+    misapplied = list(syn("M1"))
+  ))
+  expect_identical(tb$id, c("H1", "S1", "S2", "M1"))
+  expect_identical(
+    tb$synonym_type,
+    c("homotypic", "heterotypic", "heterotypic", "misapplied")
+  )
+  expect_identical(names(tb)[1], "synonym_type")
+
+  expect_identical(nrow(clb_synonymy_to_tibble(list())), 0L)
+  expect_identical(nrow(clb_synonymy_to_tibble(NULL)), 0L)
+})

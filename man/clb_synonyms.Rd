@@ -15,11 +15,11 @@ clb_synonyms(id, dataset = "3LXR", .raw = FALSE)
 }
 \value{
 A \link[tibble:tibble]{tibble} of synonym usages with a \code{synonym_type}
-column (\code{"homotypic"} or \code{"heterotypic"}) and the usual flattened usage
-columns. Zero rows when the taxon has no synonyms.
+column (\code{"homotypic"}, \code{"heterotypic"} or \code{"misapplied"}) and the usual
+flattened usage columns. Zero rows when the taxon has no synonyms.
 }
 \description{
-Synonyms of a taxon.
+Synonyms of a taxon
 }
 \examples{
 \dontrun{

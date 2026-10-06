@@ -8,25 +8,50 @@
 \alias{col_dataset}
 \alias{col_dataset_metrics}
 \alias{col_usage}
+\alias{col_usage_info}
 \alias{col_usage_search}
 \alias{col_search}
 \alias{col_suggest}
 \alias{col_classification}
 \alias{col_synonyms}
 \alias{col_vernacular}
+\alias{col_distribution}
+\alias{col_interaction}
+\alias{col_media}
+\alias{col_property}
+\alias{col_relation}
 \alias{col_usage_metrics}
 \alias{col_tree}
 \alias{col_children}
 \title{Catalogue of Life shortcuts}
 \usage{
-col_match(name, authorship = NULL, rank = NULL, code = NULL,
-  server = NULL, .raw = FALSE)
+col_match(
+  name,
+  authorship = NULL,
+  rank = NULL,
+  code = NULL,
+  server = NULL,
+  .raw = FALSE
+)
 
-col_match_verbose(name, authorship = NULL, rank = NULL, code = NULL,
-  server = NULL, .raw = FALSE)
+col_match_verbose(
+  name,
+  authorship = NULL,
+  rank = NULL,
+  code = NULL,
+  server = NULL,
+  .raw = FALSE
+)
 
-col_match_checklist(data, name = "name", authorship = "authorship",
-  rank = "rank", code = "code", server = NULL, max_active = 5L)
+col_match_checklist(
+  data,
+  name = "name",
+  authorship = "authorship",
+  rank = "rank",
+  code = "code",
+  server = NULL,
+  max_active = 5L
+)
 
 col_dataset(.raw = FALSE)
 
@@ -34,11 +59,18 @@ col_dataset_metrics(.raw = FALSE)
 
 col_usage(id, .raw = FALSE)
 
-col_usage_search(q = NULL, rank = NULL, status = NULL, ..., limit = 50L,
-  max = limit)
+col_usage_info(id, .raw = FALSE)
 
-col_search(q = NULL, rank = NULL, status = NULL, ..., limit = 50L,
-  max = limit)
+col_usage_search(
+  q = NULL,
+  rank = NULL,
+  status = NULL,
+  ...,
+  limit = 50L,
+  max = limit
+)
+
+col_search(q = NULL, rank = NULL, status = NULL, ..., limit = 50L, max = limit)
 
 col_suggest(q, ..., .raw = FALSE)
 
@@ -46,16 +78,38 @@ col_classification(id, .raw = FALSE)
 
 col_synonyms(id, .raw = FALSE)
 
-col_vernacular(id = NULL, q = NULL, lang = NULL, ..., limit = 50L,
-  max = limit, .raw = FALSE)
+col_vernacular(
+  id = NULL,
+  q = NULL,
+  lang = NULL,
+  ...,
+  limit = 50L,
+  max = limit,
+  .raw = FALSE
+)
+
+col_distribution(id, .raw = FALSE)
+
+col_interaction(id, .raw = FALSE)
+
+col_media(id, .raw = FALSE)
+
+col_property(id, .raw = FALSE)
+
+col_relation(id, .raw = FALSE)
 
 col_usage_metrics(id, .raw = FALSE)
 
-col_tree(id = NULL, extinct = TRUE, ..., limit = 100L, max = limit,
-  .raw = FALSE)
+col_tree(
+  id = NULL,
+  extinct = TRUE,
+  ...,
+  limit = 100L,
+  max = limit,
+  .raw = FALSE
+)
 
-col_children(id, extinct = TRUE, ..., limit = 100L, max = limit,
-  .raw = FALSE)
+col_children(id, extinct = TRUE, ..., limit = 100L, max = limit, .raw = FALSE)
 }
 \arguments{
 \item{name, authorship, rank, code, server, data, max_active}{See \code{\link[=clb_match]{clb_match()}} and
@@ -65,7 +119,7 @@ col_children(id, extinct = TRUE, ..., limit = 100L, max = limit,
 
 \item{id}{Usage or taxon id within the COL release.}
 
-\item{q}{Free-text query (or partial name for \code{col_suggest()}).}
+\item{q}{Free-text query (or partial name for \code{\link[=col_suggest]{col_suggest()}}).}
 
 \item{status}{Taxonomic status filter.}
 
@@ -74,7 +128,7 @@ function.}
 
 \item{limit, max}{Pagination controls, as in the \verb{clb_*()} functions.}
 
-\item{lang}{ISO language filter for \code{col_vernacular()}.}
+\item{lang}{ISO language filter for \code{\link[=col_vernacular]{col_vernacular()}}.}
 
 \item{extinct}{Logical; include extinct taxa in tree navigation.}
 }

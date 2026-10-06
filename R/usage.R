@@ -25,6 +25,56 @@ clb_as_usage_list <- function(x) {
   list()
 }
 
+# Convert a Synonymy object into a tibble of synonym usages tagged by type.
+# `heterotypicGroups` repeats the `heterotypic` synonyms grouped by homotypic
+# group, so it is ignored here to avoid duplicates.
+clb_synonymy_to_tibble <- function(syn) {
+  tag <- function(lst, type) lapply(clb_as_usage_list(lst), function(s) {
+    r <- clb_flatten_usage(s)
+    r$synonym_type <- type
+    r
+  })
+  rows <- c(
+    tag(syn$homotypic, "homotypic"),
+    tag(syn$heterotypic, "heterotypic"),
+    tag(syn$misapplied, "misapplied")
+  )
+  if (!length(rows)) return(tibble::tibble())
+  out <- clb_bind_rows(rows)
+  out[c("synonym_type", setdiff(names(out), "synonym_type"))]
+}
+
+# Turn an id-keyed map of records (e.g. references) into a tibble; each record
+# carries its own `id`, so the map keys are dropped.
+clb_map_to_tibble <- function(m) {
+  clb_records_to_tibble(unname(m %||% list()))
+}
+
+# Fetch a list-valued taxon subresource (e.g. `distribution`, `media`) as a
+# tibble, one row per record.
+clb_taxon_records <- function(id, dataset, resource, .raw = FALSE) {
+  resp <- clb_get("dataset", as.character(dataset), "taxon", as.character(id), resource)
+  if (isTRUE(.raw)) return(resp)
+  clb_records_to_tibble(resp)
+}
+
+# Distribution records as a tibble, with the nested `area` object replaced by
+# `area_gazetteer`, `area_id` and `area_name` columns.
+clb_distributions_to_tibble <- function(records) {
+  out <- clb_records_to_tibble(records)
+  idx <- match("area", names(out))
+  if (is.na(idx)) return(out)
+  area_field <- function(f) {
+    as.character(clb_coerce_scalar(lapply(out$area, function(a) a[[f]])))
+  }
+  hoisted <- list(
+    area_gazetteer = area_field("gazetteer"),
+    area_id = area_field("id"),
+    area_name = area_field("name")
+  )
+  tibble::as_tibble(c(out[seq_len(idx - 1L)], hoisted, out[-seq_len(idx)]))
+}
+
 #' Get a name usage (taxon or synonym) by id
 #'
 #' @param id Usage id within the dataset.
@@ -44,6 +94,92 @@ clb_usage <- function(id, dataset = "3LXR", .raw = FALSE) {
   resp <- clb_get("dataset", as.character(dataset), "nameusage", as.character(id))
   if (isTRUE(.raw)) return(resp)
   tibble::as_tibble(clb_flatten_usage(resp))
+}
+
+#' Full information about a name usage
+#'
+#' Fetches the complete `UsageInfo` document for a usage in one request: the
+#' usage itself together with its classification, synonymy, vernacular names,
+#' distributions, media, references, type material and other related data, as
+#' shown on a ChecklistBank taxon page. Works for accepted taxa and synonyms.
+#'
+#' @param id Usage id within the dataset.
+#' @param dataset Dataset key or alias. Defaults to `"3LXR"`.
+#' @param .raw Return the raw parsed JSON instead of a `clb_usage_info` list?
+#'
+#' @return A `clb_usage_info` object: a named list whose elements are always
+#'   present, empty when the API returns no data for them:
+#'   * `usage`: a one-row [tibble][tibble::tibble] as returned by [clb_usage()].
+#'   * `group`: the informal taxonomic group, e.g. `"chordates"`.
+#'   * `classification`, `synonyms`, `vernacular_names`, `distributions`,
+#'     `media`, `name_relations`, `properties`, `concept_relations`,
+#'     `species_interactions`, `estimates`, `type_material`: tibbles, one row
+#'     per record. `synonyms` and `distributions` are shaped as in
+#'     [clb_synonyms()] and [clb_distribution()].
+#'   * `references`, `names`, `taxa`, `decisions`: tibbles of the records
+#'     referred to by id from the other elements.
+#'   * `published_in`, `source`, `verbatim`: nested lists, or `NULL` when
+#'     absent.
+#'
+#'   The usage's treatment document is not included; use `.raw = TRUE` to get
+#'   it.
+#' @seealso [clb_usage()], [clb_classification()], [clb_synonyms()],
+#'   [clb_vernacular()]
+#' @export
+#' @examples
+#' \dontrun{
+#' info <- clb_usage_info("6JBVG", dataset = "3LR")
+#' info
+#' info$vernacular_names
+#' }
+clb_usage_info <- function(id, dataset = "3LXR", .raw = FALSE) {
+  resp <- clb_get("dataset", as.character(dataset), "taxon", as.character(id), "info")
+  if (isTRUE(.raw)) return(resp)
+  structure(
+    list(
+      usage = tibble::as_tibble(clb_flatten_usage(resp$usage %||% list())),
+      group = resp$group %||% NA_character_,
+      classification = clb_records_to_tibble(resp$classification),
+      synonyms = clb_synonymy_to_tibble(resp$synonyms),
+      vernacular_names = clb_records_to_tibble(resp$vernacularNames),
+      distributions = clb_distributions_to_tibble(resp$distributions),
+      media = clb_records_to_tibble(resp$media),
+      name_relations = clb_records_to_tibble(resp$nameRelations),
+      properties = clb_records_to_tibble(resp$properties),
+      concept_relations = clb_records_to_tibble(resp$conceptRelations),
+      species_interactions = clb_records_to_tibble(resp$speciesInteractions),
+      estimates = clb_records_to_tibble(resp$estimates),
+      type_material = clb_records_to_tibble(
+        unlist(unname(resp$typeMaterial), recursive = FALSE)
+      ),
+      references = clb_map_to_tibble(resp$references),
+      names = clb_map_to_tibble(resp$names),
+      taxa = clb_map_to_tibble(resp$taxa),
+      decisions = clb_map_to_tibble(resp$decisions),
+      published_in = resp$publishedIn,
+      source = resp$source,
+      verbatim = resp$verbatim
+    ),
+    class = "clb_usage_info"
+  )
+}
+
+#' @export
+print.clb_usage_info <- function(x, ...) {
+  u <- x$usage
+  cli::cli_text(
+    "{.cls clb_usage_info} {u$label} [{u$status}, {u$rank}, group: {x$group}]"
+  )
+  counts <- vapply(
+    x, function(el) if (is.data.frame(el)) nrow(el) else 0L, integer(1)
+  )
+  counts <- counts[setdiff(names(counts), "usage")]
+  counts <- counts[counts > 0L]
+  if (length(counts)) {
+    lines <- paste0(names(counts), ": ", counts)
+    cli::cli_bullets(structure(lines, names = rep("*", length(lines))))
+  }
+  invisible(x)
 }
 
 #' Full-text search of name usages
@@ -145,8 +281,8 @@ clb_classification <- function(id, dataset = "3LXR", .raw = FALSE) {
 #' @param .raw Return the raw parsed JSON instead of a tibble?
 #'
 #' @return A [tibble][tibble::tibble] of synonym usages with a `synonym_type`
-#'   column (`"homotypic"` or `"heterotypic"`) and the usual flattened usage
-#'   columns. Zero rows when the taxon has no synonyms.
+#'   column (`"homotypic"`, `"heterotypic"` or `"misapplied"`) and the usual
+#'   flattened usage columns. Zero rows when the taxon has no synonyms.
 #' @seealso [clb_usage()]
 #' @export
 #' @examples
@@ -156,18 +292,7 @@ clb_classification <- function(id, dataset = "3LXR", .raw = FALSE) {
 clb_synonyms <- function(id, dataset = "3LXR", .raw = FALSE) {
   resp <- clb_get("dataset", as.character(dataset), "taxon", as.character(id), "synonyms")
   if (isTRUE(.raw)) return(resp)
-
-  homo <- clb_as_usage_list(resp$homotypic)
-  het <- clb_as_usage_list(c(resp$heterotypic, resp$heterotypicGroups))
-  tag <- function(lst, type) lapply(lst, function(s) {
-    r <- clb_flatten_usage(s)
-    r$synonym_type <- type
-    r
-  })
-  rows <- c(tag(homo, "homotypic"), tag(het, "heterotypic"))
-  if (!length(rows)) return(tibble::tibble())
-  out <- clb_bind_rows(rows)
-  out[c("synonym_type", setdiff(names(out), "synonym_type"))]
+  clb_synonymy_to_tibble(resp)
 }
 
 #' Vernacular (common) names
@@ -210,6 +335,101 @@ clb_vernacular <- function(id = NULL, dataset = "3LXR", q = NULL, lang = NULL,
     limit = limit, max = max
   )
   clb_records_to_tibble(paged$result)
+}
+
+#' Distributions of a taxon
+#'
+#' @param id Taxon id within the dataset.
+#' @param dataset Dataset key or alias. Defaults to `"3LXR"`.
+#' @param .raw Return the raw parsed JSON instead of a tibble?
+#'
+#' @return A [tibble][tibble::tibble] of distribution records. The nested area
+#'   is returned as `area_gazetteer`, `area_id` and `area_name` columns,
+#'   alongside fields such as `establishmentMeans`, `threatStatus` and
+#'   `referenceId`. Zero rows when the taxon has no distributions.
+#' @seealso [clb_usage_info()]
+#' @export
+#' @examples
+#' \dontrun{
+#' clb_distribution("4CGXP", dataset = "3LR")
+#' }
+clb_distribution <- function(id, dataset = "3LXR", .raw = FALSE) {
+  resp <- clb_get("dataset", as.character(dataset), "taxon", as.character(id), "distribution")
+  if (isTRUE(.raw)) return(resp)
+  clb_distributions_to_tibble(resp)
+}
+
+#' Species interactions of a taxon
+#'
+#' @inheritParams clb_distribution
+#'
+#' @return A [tibble][tibble::tibble] of interactions with columns such as
+#'   `type`, `relatedTaxonId`, `relatedTaxonScientificName` and `referenceId`.
+#'   Zero rows when the taxon has no interactions.
+#' @seealso [clb_relation()], [clb_usage_info()]
+#' @export
+#' @examples
+#' \dontrun{
+#' clb_interaction("4CGXP", dataset = "3LR")
+#' }
+clb_interaction <- function(id, dataset = "3LXR", .raw = FALSE) {
+  clb_taxon_records(id, dataset, "interaction", .raw = .raw)
+}
+
+#' Media of a taxon
+#'
+#' @inheritParams clb_distribution
+#'
+#' @return A [tibble][tibble::tibble] of media items with columns such as
+#'   `url`, `thumbnail`, `type`, `title`, `license` and `capturedBy`. Zero rows
+#'   when the taxon has no media.
+#' @seealso [clb_usage_info()]
+#' @export
+#' @examples
+#' \dontrun{
+#' clb_media("4CGXP", dataset = "3LR")
+#' }
+clb_media <- function(id, dataset = "3LXR", .raw = FALSE) {
+  clb_taxon_records(id, dataset, "media", .raw = .raw)
+}
+
+#' Properties of a taxon
+#'
+#' Free-form taxon properties such as traits or descriptive facts.
+#'
+#' @inheritParams clb_distribution
+#'
+#' @return A [tibble][tibble::tibble] of properties with columns such as
+#'   `property`, `value`, `referenceId` and `ordinal`. Zero rows when the
+#'   taxon has no properties.
+#' @seealso [clb_usage_info()]
+#' @export
+#' @examples
+#' \dontrun{
+#' clb_property("4CGXP", dataset = "3LR")
+#' }
+clb_property <- function(id, dataset = "3LXR", .raw = FALSE) {
+  clb_taxon_records(id, dataset, "property", .raw = .raw)
+}
+
+#' Taxon concept relations of a taxon
+#'
+#' Relations between this taxon concept and others, e.g. `"equals"`,
+#' `"includes"` or `"overlaps"`.
+#'
+#' @inheritParams clb_distribution
+#'
+#' @return A [tibble][tibble::tibble] of relations with columns such as
+#'   `type`, `relatedTaxonId` and `referenceId`. Zero rows when the taxon has
+#'   no concept relations.
+#' @seealso [clb_interaction()], [clb_usage_info()]
+#' @export
+#' @examples
+#' \dontrun{
+#' clb_relation("4CGXP", dataset = "3LR")
+#' }
+clb_relation <- function(id, dataset = "3LXR", .raw = FALSE) {
+  clb_taxon_records(id, dataset, "relation", .raw = .raw)
 }
 
 #' Metrics for a taxon

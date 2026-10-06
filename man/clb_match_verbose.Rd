@@ -25,9 +25,12 @@ it separately via \code{authorship}.}
 \item{code}{Optional nomenclatural code (\code{"zoological"}, \code{"botanical"},
 \code{"bacterial"}, \code{"virus"}, ...).}
 
-\item{dataset}{Dataset key or alias to match against. Defaults to \code{"3LXR"}.}
+\item{dataset}{Dataset key or alias to match against. Defaults to \code{"3LXR"}.
+See \code{\link[=clb_col_release]{clb_col_release()}} for the COL release aliases.}
 
-\item{server}{Optional base URL of an alternative matching service.}
+\item{server}{Optional base URL of an alternative matching service, e.g. a
+locally running dockerized matching container
+(\code{"http://localhost:8080"}). Overrides \code{CLB_BASE_URL} for this call.}
 
 \item{.raw}{Return the raw parsed JSON response instead of a tibble?}
 }

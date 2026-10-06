@@ -12,7 +12,12 @@
   releases.
 * Parsers: `clb_parsers()`, `clb_parse_name()`, `clb_parse()`.
 * Datasets: `clb_dataset_search()`, `clb_dataset()`, `clb_dataset_metrics()`.
-* Name usages and taxa: `clb_usage()`, `clb_usage_search()` / `clb_search()`,
-  `clb_suggest()`, `clb_classification()`, `clb_synonyms()`,
-  `clb_vernacular()`, `clb_usage_metrics()`.
+* Name usages and taxa: `clb_usage()`, `clb_usage_info()`,
+  `clb_usage_search()` / `clb_search()`, `clb_suggest()`,
+  `clb_classification()`, `clb_synonyms()`, `clb_vernacular()`,
+  `clb_distribution()`, `clb_interaction()`, `clb_media()`, `clb_property()`,
+  `clb_relation()`, `clb_usage_metrics()`.
+* `clb_usage_info()` / `col_usage_info()` return the full usage information
+  document (usage, classification, synonymy, vernacular names, distributions,
+  references, ...) in a single request.
 * Tree navigation: `clb_tree()`, `clb_children()`.

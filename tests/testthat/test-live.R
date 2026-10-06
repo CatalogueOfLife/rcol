@@ -57,3 +57,28 @@ test_that("tree roots and children resolve", {
   kids <- clb_children(roots$id[1], dataset = "3LR", max = 5)
   expect_s3_class(kids, "tbl_df")
 })
+
+test_that("usage info returns the full usage document", {
+  skip_on_cran()
+  skip_if_offline("api.checklistbank.org")
+
+  info <- clb_usage_info("6JBVG", dataset = "3LR")
+  expect_s3_class(info, "clb_usage_info")
+  expect_identical(info$usage$scientific_name, "Flustra foliacea")
+  expect_identical(info$group, "otheranimals")
+  expect_true(nrow(info$classification) >= 1)
+  expect_true(nrow(info$vernacular_names) >= 1)
+  expect_true(nrow(info$references) >= 1)
+})
+
+test_that("taxon subresources resolve", {
+  skip_on_cran()
+  skip_if_offline("api.checklistbank.org")
+
+  dist <- clb_distribution("4CGXP", dataset = "3LR")
+  expect_true("Africa" %in% dist$area_name)
+
+  for (f in list(clb_interaction, clb_media, clb_property, clb_relation)) {
+    expect_s3_class(f("4CGXP", dataset = "3LR"), "tbl_df")
+  }
+})

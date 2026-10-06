@@ -42,8 +42,8 @@ clb_search(
 \item{max}{Maximum number of usages to return. Use \code{Inf} to fetch all.}
 }
 \value{
-A \code{clb} object: a list with \code{$data} (a \link[tibble:tibble]{tibble} of
-usages) and \code{$meta} (with \code{total}).
+A \code{clb} object: a list with \verb{$data} (a \link[tibble:tibble]{tibble} of
+usages) and \verb{$meta} (with \code{total}).
 }
 \description{
 Searches name usages within a dataset (defaults to the latest extended COL

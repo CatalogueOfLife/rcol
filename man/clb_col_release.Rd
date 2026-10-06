@@ -23,7 +23,7 @@ from which immutable \emph{releases} are derived. There are two cadences
 (monthly and annual) and two flavours (a \emph{base} release and an \emph{extended}
 release \code{XR}, which merges additional external data). This helper returns
 the dataset identifier (an alias such as \code{"3LXR"} or \code{"COL25"}) you can pass
-to any \code{dataset =} argument in this package.
+to any \verb{dataset =} argument in this package.
 }
 \details{
 The monthly releases have stable magic aliases that always point at the most

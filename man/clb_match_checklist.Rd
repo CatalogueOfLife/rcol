@@ -36,7 +36,7 @@ input columns first followed by the match result columns of \code{\link[=clb_mat
 }
 \description{
 Matches many names at once, issuing requests in parallel. Input columns are
-echoed back on each row with a \verb{verbatim_} prefix so results stay aligned
+echoed back on each row with a \code{verbatim_} prefix so results stay aligned
 with the source.
 }
 \examples{

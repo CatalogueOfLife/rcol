@@ -29,9 +29,8 @@ clb_dataset_search(
 \item{max}{Maximum number of datasets to return. Use \code{Inf} to fetch all.}
 }
 \value{
-A \code{clb} object whose \code{$data} is a \link[tibble:tibble]{tibble} of
-datasets, one row each, with columns such as \code{key}, \code{alias}, \code{title},
-\code{type}, \code{origin}, \code{license} and \code{issued}.
+A \link[tibble:tibble]{tibble} of datasets, one row each, with columns
+such as \code{key}, \code{alias}, \code{title}, \code{type}, \code{origin}, \code{license} and \code{issued}.
 }
 \description{
 Full-text and faceted search across all public datasets in ChecklistBank.

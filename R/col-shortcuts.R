@@ -83,6 +83,12 @@ col_usage <- function(id, .raw = FALSE) {
 
 #' @rdname col_shortcuts
 #' @export
+col_usage_info <- function(id, .raw = FALSE) {
+  clb_usage_info(id, dataset = col_key(), .raw = .raw)
+}
+
+#' @rdname col_shortcuts
+#' @export
 col_usage_search <- function(q = NULL, rank = NULL, status = NULL, ...,
                              limit = 50L, max = limit) {
   clb_usage_search(q, dataset = col_key(), rank = rank, status = status, ...,
@@ -117,6 +123,36 @@ col_vernacular <- function(id = NULL, q = NULL, lang = NULL, ...,
                            limit = 50L, max = limit, .raw = FALSE) {
   clb_vernacular(id = id, dataset = col_key(), q = q, lang = lang, ...,
                  limit = limit, max = max, .raw = .raw)
+}
+
+#' @rdname col_shortcuts
+#' @export
+col_distribution <- function(id, .raw = FALSE) {
+  clb_distribution(id, dataset = col_key(), .raw = .raw)
+}
+
+#' @rdname col_shortcuts
+#' @export
+col_interaction <- function(id, .raw = FALSE) {
+  clb_interaction(id, dataset = col_key(), .raw = .raw)
+}
+
+#' @rdname col_shortcuts
+#' @export
+col_media <- function(id, .raw = FALSE) {
+  clb_media(id, dataset = col_key(), .raw = .raw)
+}
+
+#' @rdname col_shortcuts
+#' @export
+col_property <- function(id, .raw = FALSE) {
+  clb_property(id, dataset = col_key(), .raw = .raw)
+}
+
+#' @rdname col_shortcuts
+#' @export
+col_relation <- function(id, .raw = FALSE) {
+  clb_relation(id, dataset = col_key(), .raw = .raw)
 }
 
 #' @rdname col_shortcuts

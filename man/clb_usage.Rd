@@ -19,7 +19,7 @@ A one-row \link[tibble:tibble]{tibble} with the usage's \code{id},
 and the full nested \code{name} as a list-column.
 }
 \description{
-Get a name usage (taxon or synonym) by id.
+Get a name usage (taxon or synonym) by id
 }
 \examples{
 \dontrun{
