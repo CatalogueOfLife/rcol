@@ -15,8 +15,16 @@ clb_usage(id, dataset = "3LXR", .raw = FALSE)
 }
 \value{
 A one-row \link[tibble:tibble]{tibble} with the usage's \code{id},
-\code{scientific_name}, \code{authorship}, \code{rank}, \code{status}, \code{label}, \code{parent_id}
-and the full nested \code{name} as a list-column.
+\code{scientific_name}, \code{authorship}, \code{rank}, \code{status}, \code{label}, \code{parent_id},
+\code{extinct}, the accepted usage of a synonym (\code{accepted_id},
+\code{accepted_name}), its provenance (\code{origin}, \code{dataset_key}, \code{sector_key},
+\code{sector_mode}, \code{verbatim_key}, \code{verbatim_source_key}, \code{merged}), further
+usage fields (\code{name_phrase}, \code{according_to}, \code{according_to_id}, \code{link},
+\code{remarks}, \code{scrutinizer}, \code{scrutinizer_id}, \code{scrutinizer_date},
+\code{temporal_range_start}, \code{temporal_range_end}, \code{ordinal}), the list-columns
+\code{identifier}, \code{reference_ids} and \code{environments}, and the full nested
+\code{name} as a list-column. Fields that do not apply, such as \code{scrutinizer}
+for a synonym, are \code{NA}.
 }
 \description{
 Get a name usage (taxon or synonym) by id

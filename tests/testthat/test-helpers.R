@@ -51,6 +51,82 @@ test_that("clb_flatten_usage hoists name fields and keeps name list-col", {
   expect_identical(row$rank, "species")
   expect_identical(row$parent_id, "P")
   expect_true(is.list(row$name))
+  expect_identical(names(row)[length(row)], "name")
+})
+
+test_that("clb_flatten_usage includes all usage fields", {
+  u <- list(
+    id = "X1",
+    status = "accepted",
+    origin = "source",
+    datasetKey = 316441L,
+    sectorKey = 1508L,
+    verbatimSourceKey = 345992150L,
+    merged = FALSE,
+    link = "https://example.org/X1",
+    identifier = list("taxref:644245", "inat:41964"),
+    referenceIds = list("r1", "r2"),
+    scrutinizer = "W. Wozencraft",
+    scrutinizerDate = "2024-06-25",
+    environments = list("terrestrial"),
+    name = list(scientificName = "Aus bus")
+  )
+  row <- clb_flatten_usage(u)
+  expect_identical(row$origin, "source")
+  expect_identical(row$dataset_key, 316441L)
+  expect_identical(row$sector_key, 1508L)
+  expect_identical(row$verbatim_source_key, 345992150L)
+  expect_false(row$merged)
+  expect_identical(row$link, "https://example.org/X1")
+  expect_identical(row$identifier, list(c("taxref:644245", "inat:41964")))
+  expect_identical(row$reference_ids, list(c("r1", "r2")))
+  expect_identical(row$scrutinizer, "W. Wozencraft")
+  expect_identical(row$scrutinizer_date, "2024-06-25")
+  expect_identical(row$environments, list("terrestrial"))
+  # absent fields become NA
+  expect_true(is.na(row$sector_mode))
+  expect_true(is.na(row$remarks))
+  expect_true(is.na(row$accepted_id))
+})
+
+test_that("clb_flatten_usage exposes the accepted name of a synonym", {
+  u <- list(
+    id = "S1",
+    status = "synonym",
+    origin = "source",
+    accepted = list(id = "X1", name = list(scientificName = "Aus bus")),
+    name = list(scientificName = "Aus cus")
+  )
+  row <- clb_flatten_usage(u)
+  expect_identical(row$accepted_id, "X1")
+  expect_identical(row$accepted_name, "Aus bus")
+  expect_true(is.na(row$scrutinizer))
+})
+
+test_that("clb_flatten_usage falls back to parentId for a synonym's accepted_id", {
+  for (st in c("synonym", "ambiguous synonym", "misapplied")) {
+    row <- clb_flatten_usage(list(id = "S1", status = st, parentId = "X1"))
+    expect_identical(row$accepted_id, "X1")
+    expect_true(is.na(row$accepted_name))
+  }
+  # an accepted taxon's parent is not its accepted usage
+  taxon <- clb_flatten_usage(list(id = "X1", status = "accepted", parentId = "P"))
+  expect_true(is.na(taxon$accepted_id))
+  # missing status does not error
+  expect_true(is.na(clb_flatten_usage(list(id = "Y", parentId = "P"))$accepted_id))
+})
+
+test_that("flattened usages with missing array fields bind into a tibble", {
+  rows <- list(
+    clb_flatten_usage(list(id = "A", identifier = list("x:1"))),
+    clb_flatten_usage(list(id = "B"))
+  )
+  tb <- clb_bind_rows(rows)
+  expect_identical(nrow(tb), 2L)
+  expect_true(is.list(tb$identifier))
+  expect_identical(tb$identifier[[1]], "x:1")
+  expect_null(tb$identifier[[2]])
+  expect_identical(tb$origin, c(NA_character_, NA_character_))
 })
 
 test_that("clb_match_row handles matched and unmatched responses", {

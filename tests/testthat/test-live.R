@@ -82,3 +82,14 @@ test_that("taxon subresources resolve", {
     expect_s3_class(f("4CGXP", dataset = "3LR"), "tbl_df")
   }
 })
+
+test_that("usage search returns all usage fields", {
+  skip_on_cran()
+  skip_if_offline("api.checklistbank.org")
+
+  res <- clb_usage_search("Panthera leo", dataset = "3LR", max = 3)
+  expect_s3_class(res$data, "tbl_df")
+  expect_true(all(c("origin", "sector_key", "sector_dataset_key",
+                    "reference_ids") %in% names(res$data)))
+  expect_false(anyNA(res$data$origin))
+})

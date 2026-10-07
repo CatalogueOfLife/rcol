@@ -1,9 +1,19 @@
 # Name usages, taxa and related information ----------------------------------
 
+# Taxonomic status values (as serialised by the API) of synonym usages.
+clb_synonym_status <- c("synonym", "ambiguous synonym", "misapplied")
+
 # Hoist the most useful name fields out of the nested `name` object so a usage
 # becomes a tidy single row; keep the full name object as a list-column.
+# All NameUsageBase fields are included, plus the Taxon-only fields (NA for
+# synonyms) and the accepted name of a synonym (NA for taxa). Array fields
+# become list-columns of vectors. Some endpoints (e.g. taxon synonyms) omit the
+# nested `accepted` usage; a synonym's parent is its accepted usage, so
+# `accepted_id` falls back to `parentId` then.
 clb_flatten_usage <- function(u) {
   nm <- u$name %||% list()
+  acc <- u$accepted %||% list()
+  is_synonym <- isTRUE(u$status %in% clb_synonym_status)
   list(
     id = u$id %||% NA_character_,
     scientific_name = nm$scientificName %||% u$name$scientificName %||% NA_character_,
@@ -13,6 +23,29 @@ clb_flatten_usage <- function(u) {
     label = u$label %||% NA_character_,
     parent_id = u$parentId %||% NA_character_,
     extinct = u$extinct %||% NA,
+    accepted_id = acc$id %||% (if (is_synonym) u$parentId) %||% NA_character_,
+    accepted_name = acc$name$scientificName %||% NA_character_,
+    origin = u$origin %||% NA_character_,
+    dataset_key = u$datasetKey %||% NA_integer_,
+    sector_key = u$sectorKey %||% NA_integer_,
+    sector_mode = u$sectorMode %||% NA_character_,
+    verbatim_key = u$verbatimKey %||% NA_integer_,
+    verbatim_source_key = u$verbatimSourceKey %||% NA_integer_,
+    merged = u$merged %||% NA,
+    name_phrase = u$namePhrase %||% NA_character_,
+    according_to = u$accordingTo %||% NA_character_,
+    according_to_id = u$accordingToId %||% NA_character_,
+    link = u$link %||% NA_character_,
+    remarks = u$remarks %||% NA_character_,
+    identifier = list(unlist(u$identifier)),
+    reference_ids = list(unlist(u$referenceIds)),
+    scrutinizer = u$scrutinizer %||% NA_character_,
+    scrutinizer_id = u$scrutinizerID %||% NA_character_,
+    scrutinizer_date = u$scrutinizerDate %||% NA_character_,
+    temporal_range_start = u$temporalRangeStart %||% NA_character_,
+    temporal_range_end = u$temporalRangeEnd %||% NA_character_,
+    ordinal = u$ordinal %||% NA_integer_,
+    environments = list(unlist(u$environments)),
     name = list(nm)
   )
 }
@@ -82,8 +115,16 @@ clb_distributions_to_tibble <- function(records) {
 #' @param .raw Return the raw parsed JSON instead of a tibble?
 #'
 #' @return A one-row [tibble][tibble::tibble] with the usage's `id`,
-#'   `scientific_name`, `authorship`, `rank`, `status`, `label`, `parent_id`
-#'   and the full nested `name` as a list-column.
+#'   `scientific_name`, `authorship`, `rank`, `status`, `label`, `parent_id`,
+#'   `extinct`, the accepted usage of a synonym (`accepted_id`,
+#'   `accepted_name`), its provenance (`origin`, `dataset_key`, `sector_key`,
+#'   `sector_mode`, `verbatim_key`, `verbatim_source_key`, `merged`), further
+#'   usage fields (`name_phrase`, `according_to`, `according_to_id`, `link`,
+#'   `remarks`, `scrutinizer`, `scrutinizer_id`, `scrutinizer_date`,
+#'   `temporal_range_start`, `temporal_range_end`, `ordinal`), the list-columns
+#'   `identifier`, `reference_ids` and `environments`, and the full nested
+#'   `name` as a list-column. Fields that do not apply, such as `scrutinizer`
+#'   for a synonym, are `NA`.
 #' @seealso [clb_usage_search()], [clb_classification()], [clb_synonyms()]
 #' @export
 #' @examples
@@ -185,8 +226,9 @@ print.clb_usage_info <- function(x, ...) {
 #' Full-text search of name usages
 #'
 #' Searches name usages within a dataset (defaults to the latest extended COL
-#' release). The accepted/synonym usage fields are hoisted to top-level columns;
-#' the taxonomic classification and full name object are kept as list-columns.
+#' release). The accepted/synonym usage fields are hoisted to top-level columns
+#' as in [clb_usage()], including `origin` and the sector keys; the taxonomic
+#' classification and full name object are kept as list-columns.
 #'
 #' @param q Free-text query. Optional (omit to browse with filters only).
 #' @param dataset Dataset key or alias. Defaults to `"3LXR"`.
@@ -198,7 +240,10 @@ print.clb_usage_info <- function(x, ...) {
 #' @param max Maximum number of usages to return. Use `Inf` to fetch all.
 #'
 #' @return A `clb` object: a list with `$data` (a [tibble][tibble::tibble] of
-#'   usages) and `$meta` (with `total`).
+#'   usages) and `$meta` (with `total`). Besides the columns described in
+#'   [clb_usage()], `$data` has `group`, `sector_dataset_key`,
+#'   `sector_publisher_key`, the list-columns `secondary_source_keys` and
+#'   `secondary_source_groups`, and `classification`.
 #' @seealso [clb_match()], [clb_suggest()], [clb_usage()]
 #' @export
 #' @examples
@@ -216,6 +261,10 @@ clb_usage_search <- function(q = NULL, dataset = "3LXR", rank = NULL,
   rows <- lapply(paged$result, function(w) {
     row <- clb_flatten_usage(w$usage %||% list())
     row$group <- w$group %||% NA_character_
+    row$sector_dataset_key <- w$sectorDatasetKey %||% NA_integer_
+    row$sector_publisher_key <- w$sectorPublisherKey %||% NA_character_
+    row$secondary_source_keys <- list(unlist(w$secondarySourceKeys))
+    row$secondary_source_groups <- list(unlist(w$secondarySourceGroups))
     row$classification <- list(w$classification %||% list())
     row
   })

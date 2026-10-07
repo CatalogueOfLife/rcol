@@ -1,3 +1,14 @@
+# rcol (development version)
+
+* `clb_usage()`, `clb_usage_search()`, `clb_usage_info()` and `clb_synonyms()`
+  now return all name usage fields instead of a small subset: `origin`, the
+  dataset, sector and verbatim keys, `identifier`, `reference_ids`, `link`,
+  `remarks`, the scrutinizer and temporal range of taxa, and `accepted_id` /
+  `accepted_name` for synonyms. `accepted_id` falls back to `parent_id` when
+  the API omits the accepted usage, as for `clb_synonyms()`. `clb_usage_search()` also returns
+  `sector_dataset_key`, `sector_publisher_key`, `secondary_source_keys` and
+  `secondary_source_groups`.
+
 # rcol 1.0.0
 
 * First release of the ChecklistBank-based client. It is unrelated to the

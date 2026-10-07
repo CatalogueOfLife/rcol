@@ -43,12 +43,16 @@ clb_search(
 }
 \value{
 A \code{clb} object: a list with \verb{$data} (a \link[tibble:tibble]{tibble} of
-usages) and \verb{$meta} (with \code{total}).
+usages) and \verb{$meta} (with \code{total}). Besides the columns described in
+\code{\link[=clb_usage]{clb_usage()}}, \verb{$data} has \code{group}, \code{sector_dataset_key},
+\code{sector_publisher_key}, the list-columns \code{secondary_source_keys} and
+\code{secondary_source_groups}, and \code{classification}.
 }
 \description{
 Searches name usages within a dataset (defaults to the latest extended COL
-release). The accepted/synonym usage fields are hoisted to top-level columns;
-the taxonomic classification and full name object are kept as list-columns.
+release). The accepted/synonym usage fields are hoisted to top-level columns
+as in \code{\link[=clb_usage]{clb_usage()}}, including \code{origin} and the sector keys; the taxonomic
+classification and full name object are kept as list-columns.
 }
 \examples{
 \dontrun{
