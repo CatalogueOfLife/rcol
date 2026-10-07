@@ -30,7 +30,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Get a name usage (taxon or synonym) by id</h1>
-      <small class="dont-index">Source: <a href="https://github.com/CatalogueOfLife/rcol/blob/v1.0.0/R/usage.R" class="external-link"><code>R/usage.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/CatalogueOfLife/rcol/blob/main/R/usage.R" class="external-link"><code>R/usage.R</code></a></small>
       <div class="d-none name"><code>clb_usage.Rd</code></div>
     </div>
 
@@ -62,8 +62,16 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A one-row <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a> with the usage's <code>id</code>,
-<code>scientific_name</code>, <code>authorship</code>, <code>rank</code>, <code>status</code>, <code>label</code>, <code>parent_id</code>
-and the full nested <code>name</code> as a list-column.</p>
+<code>scientific_name</code>, <code>authorship</code>, <code>rank</code>, <code>status</code>, <code>label</code>, <code>parent_id</code>,
+<code>extinct</code>, the accepted usage of a synonym (<code>accepted_id</code>,
+<code>accepted_name</code>), its provenance (<code>origin</code>, <code>dataset_key</code>, <code>sector_key</code>,
+<code>sector_mode</code>, <code>verbatim_key</code>, <code>verbatim_source_key</code>, <code>merged</code>), further
+usage fields (<code>name_phrase</code>, <code>according_to</code>, <code>according_to_id</code>, <code>link</code>,
+<code>remarks</code>, <code>scrutinizer</code>, <code>scrutinizer_id</code>, <code>scrutinizer_date</code>,
+<code>temporal_range_start</code>, <code>temporal_range_end</code>, <code>ordinal</code>), the list-columns
+<code>identifier</code>, <code>reference_ids</code> and <code>environments</code>, and the full nested
+<code>name</code> as a list-column. Fields that do not apply, such as <code>scrutinizer</code>
+for a synonym, are <code>NA</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

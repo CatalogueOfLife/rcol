@@ -1,5 +1,22 @@
 # Changelog
 
+## rcol (development version)
+
+- [`clb_usage()`](https://catalogueoflife.github.io/rcol/reference/clb_usage.md),
+  [`clb_usage_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md),
+  [`clb_usage_info()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_info.md)
+  and
+  [`clb_synonyms()`](https://catalogueoflife.github.io/rcol/reference/clb_synonyms.md)
+  now return all name usage fields instead of a small subset: `origin`,
+  the dataset, sector and verbatim keys, `identifier`, `reference_ids`,
+  `link`, `remarks`, the scrutinizer and temporal range of taxa, and
+  `accepted_id` / `accepted_name` for synonyms. `accepted_id` falls back
+  to `parent_id` when the API omits the accepted usage, as for
+  [`clb_synonyms()`](https://catalogueoflife.github.io/rcol/reference/clb_synonyms.md).
+  [`clb_usage_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md)
+  also returns `sector_dataset_key`, `sector_publisher_key`,
+  `secondary_source_keys` and `secondary_source_groups`.
+
 ## rcol 1.0.0
 
 - First release of the ChecklistBank-based client. It is unrelated to

@@ -2,8 +2,10 @@
 
 Searches name usages within a dataset (defaults to the latest extended
 COL release). The accepted/synonym usage fields are hoisted to top-level
-columns; the taxonomic classification and full name object are kept as
-list-columns.
+columns as in
+[`clb_usage()`](https://catalogueoflife.github.io/rcol/reference/clb_usage.md),
+including `origin` and the sector keys; the taxonomic classification and
+full name object are kept as list-columns.
 
 ## Usage
 
@@ -64,7 +66,11 @@ clb_search(
 
 A `clb` object: a list with `$data` (a
 [tibble](https://tibble.tidyverse.org/reference/tibble.html) of usages)
-and `$meta` (with `total`).
+and `$meta` (with `total`). Besides the columns described in
+[`clb_usage()`](https://catalogueoflife.github.io/rcol/reference/clb_usage.md),
+`$data` has `group`, `sector_dataset_key`, `sector_publisher_key`, the
+list-columns `secondary_source_keys` and `secondary_source_groups`, and
+`classification`.
 
 ## See also
 

@@ -30,9 +30,14 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/CatalogueOfLife/rcol/blob/v1.0.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/CatalogueOfLife/rcol/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="rcol-development-version">rcol (development version)<a class="anchor" aria-label="anchor" href="#rcol-development-version"></a></h2>
+<ul><li>
+<code><a href="../reference/clb_usage.html">clb_usage()</a></code>, <code><a href="../reference/clb_usage_search.html">clb_usage_search()</a></code>, <code><a href="../reference/clb_usage_info.html">clb_usage_info()</a></code> and <code><a href="../reference/clb_synonyms.html">clb_synonyms()</a></code> now return all name usage fields instead of a small subset: <code>origin</code>, the dataset, sector and verbatim keys, <code>identifier</code>, <code>reference_ids</code>, <code>link</code>, <code>remarks</code>, the scrutinizer and temporal range of taxa, and <code>accepted_id</code> / <code>accepted_name</code> for synonyms. <code>accepted_id</code> falls back to <code>parent_id</code> when the API omits the accepted usage, as for <code><a href="../reference/clb_synonyms.html">clb_synonyms()</a></code>. <code><a href="../reference/clb_usage_search.html">clb_usage_search()</a></code> also returns <code>sector_dataset_key</code>, <code>sector_publisher_key</code>, <code>secondary_source_keys</code> and <code>secondary_source_groups</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="rcol-100">rcol 1.0.0<a class="anchor" aria-label="anchor" href="#rcol-100"></a></h2>
 <ul><li>First release of the ChecklistBank-based client. It is unrelated to the rOpenSci <code>rcol</code> package (versions 0.1.0 to 0.2.0, archived on CRAN in 2022), which had a different API.</li>
@@ -47,7 +52,8 @@
 <code><a href="../reference/clb_usage_info.html">clb_usage_info()</a></code> / <code><a href="../reference/col_shortcuts.html">col_usage_info()</a></code> return the full usage information document (usage, classification, synonymy, vernacular names, distributions, references, …) in a single request.</li>
 <li>Tree navigation: <code><a href="../reference/clb_tree.html">clb_tree()</a></code>, <code><a href="../reference/clb_children.html">clb_children()</a></code>.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

@@ -10,7 +10,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/CatalogueOfLife/rcol/blob/v1.0.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/CatalogueOfLife/rcol/blob/main/DESCRIPTION)
 
 Döring M (2026). *rcol: R Client for the Catalogue of Life /
 ChecklistBank API*. R package version 1.0.0,
