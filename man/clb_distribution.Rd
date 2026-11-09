@@ -4,20 +4,34 @@
 \alias{clb_distribution}
 \title{Distributions of a taxon}
 \usage{
-clb_distribution(id, dataset = "3LXR", .raw = FALSE)
+clb_distribution(id, dataset = "3LXR", citations = TRUE, .raw = FALSE)
 }
 \arguments{
 \item{id}{Taxon id within the dataset.}
 
 \item{dataset}{Dataset key or alias. Defaults to \code{"3LXR"}.}
 
+\item{citations}{Look up the citation of each distinct \code{referenceId} and add
+it as \code{reference_citation}? This costs one extra request per distinct
+reference.}
+
 \item{.raw}{Return the raw parsed JSON instead of a tibble?}
 }
 \value{
 A \link[tibble:tibble]{tibble} of distribution records. The nested area
-is returned as \code{area_gazetteer}, \code{area_id} and \code{area_name} columns,
-alongside fields such as \code{establishmentMeans}, \code{threatStatus} and
-\code{referenceId}. Zero rows when the taxon has no distributions.
+is returned as \code{area_gazetteer}, \code{area_id} and \code{area_name} columns, plus
+\code{country_code}, the ISO 3166-1 country derived from ISO area ids (\code{BE}
+for \code{BE-VLG}; \code{NA} for other gazetteers such as TDWG or free text). The
+remaining columns are fields such as \code{establishmentMeans},
+\code{degreeOfEstablishment}, \code{pathway}, \code{threatStatus}, \code{year}, \code{referenceId}
+and, with \code{citations = TRUE}, \code{reference_citation}. Zero rows when the
+taxon has no distributions.
+
+Imported Darwin Core distributions keep only the year of \code{dwc:eventDate}
+(\verb{2014/} becomes \code{year} 2014), and \code{dwc:occurrenceStatus} is not part of
+the ColDP model. The original values are in the verbatim record of each
+row (\code{verbatimKey}), available from the API at
+\code{dataset/{key}/verbatim/{verbatimKey}}.
 }
 \description{
 Distributions of a taxon

@@ -78,6 +78,14 @@ test_that("taxon subresources resolve", {
   dist <- clb_distribution("4CGXP", dataset = "3LR")
   expect_true("Africa" %in% dist$area_name)
 
+  # DwC-A checklist with ISO 3166-2 areas and dc:source references
+  dist <- clb_distribution(
+    "alien-scheldt-checklist:taxon:af4279693fdd1add7a08a04dc97d7848",
+    dataset = 7033
+  )
+  expect_true(all(dist$country_code == "BE"))
+  expect_true(all(startsWith(dist$reference_citation, "Soors, J.")))
+
   for (f in list(clb_interaction, clb_media, clb_property, clb_relation)) {
     expect_s3_class(f("4CGXP", dataset = "3LR"), "tbl_df")
   }

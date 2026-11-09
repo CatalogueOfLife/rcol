@@ -88,7 +88,7 @@ col_vernacular(
   .raw = FALSE
 )
 
-col_distribution(id, .raw = FALSE)
+col_distribution(id, citations = TRUE, .raw = FALSE)
 
 col_interaction(id, .raw = FALSE)
 
@@ -129,6 +129,9 @@ function.}
 \item{limit, max}{Pagination controls, as in the \verb{clb_*()} functions.}
 
 \item{lang}{ISO language filter for \code{\link[=col_vernacular]{col_vernacular()}}.}
+
+\item{citations}{Add \code{reference_citation} to \code{\link[=col_distribution]{col_distribution()}}, see
+\code{\link[=clb_distribution]{clb_distribution()}}.}
 
 \item{extinct}{Logical; include extinct taxa in tree navigation.}
 }

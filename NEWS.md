@@ -8,6 +8,11 @@
   the API omits the accepted usage, as for `clb_synonyms()`. `clb_usage_search()` also returns
   `sector_dataset_key`, `sector_publisher_key`, `secondary_source_keys` and
   `secondary_source_groups`.
+* `clb_distribution()`, `col_distribution()` and `clb_usage_info()$distributions`
+  gain `country_code`, the ISO country of ISO gazetteer areas (`BE` for
+  `BE-VLG`), and `reference_citation`, the citation of the distribution's
+  reference. `clb_distribution()` looks up each distinct reference once; pass
+  `citations = FALSE` to skip that (#6).
 
 # rcol 1.0.0
 

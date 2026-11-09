@@ -19,6 +19,8 @@
 #' @param status Taxonomic status filter.
 #' @param lang ISO language filter for [col_vernacular()].
 #' @param extinct Logical; include extinct taxa in tree navigation.
+#' @param citations Add `reference_citation` to [col_distribution()], see
+#'   [clb_distribution()].
 #' @param limit,max Pagination controls, as in the `clb_*()` functions.
 #' @param ... Further query parameters forwarded to the underlying `clb_*()`
 #'   function.
@@ -127,8 +129,8 @@ col_vernacular <- function(id = NULL, q = NULL, lang = NULL, ...,
 
 #' @rdname col_shortcuts
 #' @export
-col_distribution <- function(id, .raw = FALSE) {
-  clb_distribution(id, dataset = col_key(), .raw = .raw)
+col_distribution <- function(id, citations = TRUE, .raw = FALSE) {
+  clb_distribution(id, dataset = col_key(), citations = citations, .raw = .raw)
 }
 
 #' @rdname col_shortcuts

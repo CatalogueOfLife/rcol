@@ -70,6 +70,23 @@ test_that("clb_usage_info calls the taxon info endpoint and shapes the result", 
   )
 })
 
+test_that("clb_usage_info resolves distribution citations from its references", {
+  fx <- usage_info_fixture()
+  fx$distributions <- list(
+    list(id = 1L, area = list(gazetteer = "iso", id = "BE-VLG"), referenceId = "r2"),
+    list(id = 2L, area = list(gazetteer = "text", name = "Africa"))
+  )
+  n_calls <- 0L
+  local_mocked_bindings(clb_get = function(...) {
+    n_calls <<- n_calls + 1L
+    fx
+  })
+  info <- clb_usage_info("6JBVG", dataset = "3LR")
+  expect_identical(n_calls, 1L)
+  expect_identical(info$distributions$country_code, c("BE", NA))
+  expect_identical(info$distributions$reference_citation, c("Ref two.", NA))
+})
+
 test_that("clb_usage_info returns the raw response with .raw = TRUE", {
   local_mocked_bindings(clb_get = function(...) usage_info_fixture())
   expect_identical(clb_usage_info("6JBVG", .raw = TRUE), usage_info_fixture())

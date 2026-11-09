@@ -91,21 +91,57 @@ clb_taxon_records <- function(id, dataset, resource, .raw = FALSE) {
   clb_records_to_tibble(resp)
 }
 
+# ISO 3166-1 country code of ISO gazetteer area ids, which are either a country
+# (`DE`) or an ISO 3166-2 subdivision (`BE-VLG`); NA for other gazetteers.
+clb_iso_country_code <- function(gazetteer, area_id) {
+  m <- regmatches(area_id, regexec("^([A-Za-z]{2})(-|$)", area_id))
+  code <- vapply(m, function(x) if (length(x)) toupper(x[[2]]) else NA_character_,
+                 character(1))
+  code[is.na(gazetteer) | gazetteer != "iso"] <- NA_character_
+  code
+}
+
 # Distribution records as a tibble, with the nested `area` object replaced by
-# `area_gazetteer`, `area_id` and `area_name` columns.
-clb_distributions_to_tibble <- function(records) {
+# `area_gazetteer`, `area_id`, `area_name` and the derived `country_code`
+# columns. With `refs`, an id-keyed list of reference objects, the citation of
+# each `referenceId` is added as `reference_citation` right after it.
+clb_distributions_to_tibble <- function(records, refs = NULL) {
   out <- clb_records_to_tibble(records)
   idx <- match("area", names(out))
-  if (is.na(idx)) return(out)
-  area_field <- function(f) {
-    as.character(clb_coerce_scalar(lapply(out$area, function(a) a[[f]])))
+  if (!is.na(idx)) {
+    area_field <- function(f) {
+      as.character(clb_coerce_scalar(lapply(out$area, function(a) a[[f]])))
+    }
+    hoisted <- list(
+      area_gazetteer = area_field("gazetteer"),
+      area_id = area_field("id"),
+      area_name = area_field("name")
+    )
+    hoisted$country_code <- clb_iso_country_code(hoisted$area_gazetteer, hoisted$area_id)
+    out <- tibble::as_tibble(c(out[seq_len(idx - 1L)], hoisted, out[-seq_len(idx)]))
   }
-  hoisted <- list(
-    area_gazetteer = area_field("gazetteer"),
-    area_id = area_field("id"),
-    area_name = area_field("name")
-  )
-  tibble::as_tibble(c(out[seq_len(idx - 1L)], hoisted, out[-seq_len(idx)]))
+  ridx <- match("referenceId", names(out))
+  if (!is.null(refs) && !is.na(ridx)) {
+    citation <- vapply(as.character(out$referenceId), function(r) {
+      if (is.na(r)) return(NA_character_)
+      as.character(refs[[r]]$citation %||% NA_character_)
+    }, character(1), USE.NAMES = FALSE)
+    out <- tibble::as_tibble(c(
+      out[seq_len(ridx)], list(reference_citation = citation), out[-seq_len(ridx)]
+    ))
+  }
+  out
+}
+
+# Fetch the distinct references of a dataset by id, as an id-keyed list.
+clb_fetch_references <- function(dataset, ids) {
+  ids <- as.character(ids)
+  ids <- unique(ids[!is.na(ids)])
+  refs <- lapply(ids, function(r) {
+    clb_get("dataset", as.character(dataset), "reference", r)
+  })
+  names(refs) <- ids
+  refs
 }
 
 #' Get a name usage (taxon or synonym) by id
@@ -183,7 +219,9 @@ clb_usage_info <- function(id, dataset = "3LXR", .raw = FALSE) {
       classification = clb_records_to_tibble(resp$classification),
       synonyms = clb_synonymy_to_tibble(resp$synonyms),
       vernacular_names = clb_records_to_tibble(resp$vernacularNames),
-      distributions = clb_distributions_to_tibble(resp$distributions),
+      distributions = clb_distributions_to_tibble(
+        resp$distributions, refs = resp$references %||% list()
+      ),
       media = clb_records_to_tibble(resp$media),
       name_relations = clb_records_to_tibble(resp$nameRelations),
       properties = clb_records_to_tibble(resp$properties),
@@ -390,22 +428,40 @@ clb_vernacular <- function(id = NULL, dataset = "3LXR", q = NULL, lang = NULL,
 #'
 #' @param id Taxon id within the dataset.
 #' @param dataset Dataset key or alias. Defaults to `"3LXR"`.
+#' @param citations Look up the citation of each distinct `referenceId` and add
+#'   it as `reference_citation`? This costs one extra request per distinct
+#'   reference.
 #' @param .raw Return the raw parsed JSON instead of a tibble?
 #'
 #' @return A [tibble][tibble::tibble] of distribution records. The nested area
-#'   is returned as `area_gazetteer`, `area_id` and `area_name` columns,
-#'   alongside fields such as `establishmentMeans`, `threatStatus` and
-#'   `referenceId`. Zero rows when the taxon has no distributions.
+#'   is returned as `area_gazetteer`, `area_id` and `area_name` columns, plus
+#'   `country_code`, the ISO 3166-1 country derived from ISO area ids (`BE`
+#'   for `BE-VLG`; `NA` for other gazetteers such as TDWG or free text). The
+#'   remaining columns are fields such as `establishmentMeans`,
+#'   `degreeOfEstablishment`, `pathway`, `threatStatus`, `year`, `referenceId`
+#'   and, with `citations = TRUE`, `reference_citation`. Zero rows when the
+#'   taxon has no distributions.
+#'
+#'   Imported Darwin Core distributions keep only the year of `dwc:eventDate`
+#'   (`2014/` becomes `year` 2014), and `dwc:occurrenceStatus` is not part of
+#'   the ColDP model. The original values are in the verbatim record of each
+#'   row (`verbatimKey`), available from the API at
+#'   `dataset/{key}/verbatim/{verbatimKey}`.
 #' @seealso [clb_usage_info()]
 #' @export
 #' @examples
 #' \dontrun{
 #' clb_distribution("4CGXP", dataset = "3LR")
 #' }
-clb_distribution <- function(id, dataset = "3LXR", .raw = FALSE) {
+clb_distribution <- function(id, dataset = "3LXR", citations = TRUE, .raw = FALSE) {
   resp <- clb_get("dataset", as.character(dataset), "taxon", as.character(id), "distribution")
   if (isTRUE(.raw)) return(resp)
-  clb_distributions_to_tibble(resp)
+  refs <- NULL
+  if (isTRUE(citations)) {
+    ref_ids <- unlist(lapply(resp, function(d) d$referenceId))
+    refs <- clb_fetch_references(dataset, ref_ids)
+  }
+  clb_distributions_to_tibble(resp, refs = refs)
 }
 
 #' Species interactions of a taxon
