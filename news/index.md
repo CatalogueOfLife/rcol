@@ -16,6 +16,14 @@
   [`clb_usage_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md)
   also returns `sector_dataset_key`, `sector_publisher_key`,
   `secondary_source_keys` and `secondary_source_groups`.
+- [`clb_distribution()`](https://catalogueoflife.github.io/rcol/reference/clb_distribution.md),
+  [`col_distribution()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md)
+  and `clb_usage_info()$distributions` gain `country_code`, the ISO
+  country of ISO gazetteer areas (`BE` for `BE-VLG`), and
+  `reference_citation`, the citation of the distribution’s reference.
+  [`clb_distribution()`](https://catalogueoflife.github.io/rcol/reference/clb_distribution.md)
+  looks up each distinct reference once; pass `citations = FALSE` to
+  skip that ([\#6](https://github.com/CatalogueOfLife/rcol/issues/6)).
 
 ## rcol 1.0.0
 

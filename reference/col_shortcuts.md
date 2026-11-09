@@ -75,7 +75,7 @@ col_vernacular(
   .raw = FALSE
 )
 
-col_distribution(id, .raw = FALSE)
+col_distribution(id, citations = TRUE, .raw = FALSE)
 
 col_interaction(id, .raw = FALSE)
 
@@ -136,6 +136,11 @@ col_children(id, extinct = TRUE, ..., limit = 100L, max = limit, .raw = FALSE)
 - lang:
 
   ISO language filter for `col_vernacular()`.
+
+- citations:
+
+  Add `reference_citation` to `col_distribution()`, see
+  [`clb_distribution()`](https://catalogueoflife.github.io/rcol/reference/clb_distribution.md).
 
 - extinct:
 

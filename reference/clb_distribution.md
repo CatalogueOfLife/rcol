@@ -5,7 +5,7 @@ Distributions of a taxon
 ## Usage
 
 ``` r
-clb_distribution(id, dataset = "3LXR", .raw = FALSE)
+clb_distribution(id, dataset = "3LXR", citations = TRUE, .raw = FALSE)
 ```
 
 ## Arguments
@@ -18,6 +18,12 @@ clb_distribution(id, dataset = "3LXR", .raw = FALSE)
 
   Dataset key or alias. Defaults to `"3LXR"`.
 
+- citations:
+
+  Look up the citation of each distinct `referenceId` and add it as
+  `reference_citation`? This costs one extra request per distinct
+  reference.
+
 - .raw:
 
   Return the raw parsed JSON instead of a tibble?
@@ -26,9 +32,18 @@ clb_distribution(id, dataset = "3LXR", .raw = FALSE)
 
 A [tibble](https://tibble.tidyverse.org/reference/tibble.html) of
 distribution records. The nested area is returned as `area_gazetteer`,
-`area_id` and `area_name` columns, alongside fields such as
-`establishmentMeans`, `threatStatus` and `referenceId`. Zero rows when
-the taxon has no distributions.
+`area_id` and `area_name` columns, plus `country_code`, the ISO 3166-1
+country derived from ISO area ids (`BE` for `BE-VLG`; `NA` for other
+gazetteers such as TDWG or free text). The remaining columns are fields
+such as `establishmentMeans`, `degreeOfEstablishment`, `pathway`,
+`threatStatus`, `year`, `referenceId` and, with `citations = TRUE`,
+`reference_citation`. Zero rows when the taxon has no distributions.
+
+Imported Darwin Core distributions keep only the year of `dwc:eventDate`
+(`2014/` becomes `year` 2014), and `dwc:occurrenceStatus` is not part of
+the ColDP model. The original values are in the verbatim record of each
+row (`verbatimKey`), available from the API at
+`dataset/{key}/verbatim/{verbatimKey}`.
 
 ## See also
 
