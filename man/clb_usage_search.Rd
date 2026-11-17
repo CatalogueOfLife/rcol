@@ -47,6 +47,10 @@ usages) and \verb{$meta} (with \code{total}). Besides the columns described in
 \code{\link[=clb_usage]{clb_usage()}}, \verb{$data} has \code{group}, \code{sector_dataset_key},
 \code{sector_publisher_key}, the list-columns \code{secondary_source_keys} and
 \code{secondary_source_groups}, and \code{classification}.
+
+Usage ids are those of \code{dataset}. To link the usages of a checklist to
+COL taxon ids, pass \verb{$data} to \code{\link[=clb_match_checklist]{clb_match_checklist()}} with
+\code{name = "scientific_name"}.
 }
 \description{
 Searches name usages within a dataset (defaults to the latest extended COL
@@ -61,5 +65,6 @@ clb_usage_search("Panthera", rank = "species", status = "accepted")
 }
 }
 \seealso{
-\code{\link[=clb_match]{clb_match()}}, \code{\link[=clb_suggest]{clb_suggest()}}, \code{\link[=clb_usage]{clb_usage()}}
+\code{\link[=clb_match]{clb_match()}}, \code{\link[=clb_suggest]{clb_suggest()}}, \code{\link[=clb_usage]{clb_usage()}},
+\code{\link[=clb_match_checklist]{clb_match_checklist()}}
 }

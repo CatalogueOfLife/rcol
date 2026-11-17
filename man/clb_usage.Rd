@@ -25,6 +25,13 @@ usage fields (\code{name_phrase}, \code{according_to}, \code{according_to_id}, \
 \code{identifier}, \code{reference_ids} and \code{environments}, and the full nested
 \code{name} as a list-column. Fields that do not apply, such as \code{scrutinizer}
 for a synonym, are \code{NA}.
+
+\code{scientific_name} is the name without its authorship, which is in
+\code{authorship}; \code{label} combines both (plus any \code{name_phrase}) as shown on
+ChecklistBank. The values exactly as the source supplied them are in the
+verbatim record (\code{verbatim_key}). \code{id} is the usage id within \code{dataset},
+so it is a COL taxon id only for a COL release. For any other dataset,
+match its names to get COL ids, see \code{\link[=clb_match_checklist]{clb_match_checklist()}}.
 }
 \description{
 Get a name usage (taxon or synonym) by id

@@ -5,7 +5,7 @@ clb_match_req <- function(name = NULL, authorship = NULL, rank = NULL,
                           base_url = clb_base_url()) {
   req <- clb_request(base_url = base_url)
   req <- httr2::req_url_path_append(
-    req, "dataset", as.character(dataset), "match", "nameusage"
+    req, "dataset", clb_path_encode(dataset), "match", "nameusage"
   )
   q <- clb_query(
     q = name, authorship = authorship, rank = rank,

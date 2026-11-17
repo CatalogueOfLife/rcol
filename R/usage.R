@@ -161,6 +161,13 @@ clb_fetch_references <- function(dataset, ids) {
 #'   `identifier`, `reference_ids` and `environments`, and the full nested
 #'   `name` as a list-column. Fields that do not apply, such as `scrutinizer`
 #'   for a synonym, are `NA`.
+#'
+#'   `scientific_name` is the name without its authorship, which is in
+#'   `authorship`; `label` combines both (plus any `name_phrase`) as shown on
+#'   ChecklistBank. The values exactly as the source supplied them are in the
+#'   verbatim record (`verbatim_key`). `id` is the usage id within `dataset`,
+#'   so it is a COL taxon id only for a COL release. For any other dataset,
+#'   match its names to get COL ids, see [clb_match_checklist()].
 #' @seealso [clb_usage_search()], [clb_classification()], [clb_synonyms()]
 #' @export
 #' @examples
@@ -282,7 +289,12 @@ print.clb_usage_info <- function(x, ...) {
 #'   [clb_usage()], `$data` has `group`, `sector_dataset_key`,
 #'   `sector_publisher_key`, the list-columns `secondary_source_keys` and
 #'   `secondary_source_groups`, and `classification`.
-#' @seealso [clb_match()], [clb_suggest()], [clb_usage()]
+#'
+#'   Usage ids are those of `dataset`. To link the usages of a checklist to
+#'   COL taxon ids, pass `$data` to [clb_match_checklist()] with
+#'   `name = "scientific_name"`.
+#' @seealso [clb_match()], [clb_suggest()], [clb_usage()],
+#'   [clb_match_checklist()]
 #' @export
 #' @examples
 #' \dontrun{

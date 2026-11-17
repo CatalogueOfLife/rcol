@@ -68,6 +68,25 @@ clb_query <- function(...) {
   lapply(q, function(v) if (is.logical(v)) tolower(as.character(v)) else v)
 }
 
+# URL-encode path segments, including reserved characters such as `/` and `:`,
+# so ids like `https://www.gbif.org/species/1002621` stay one segment.
+# httr2::req_url_path_append() does not encode them itself.
+clb_path_encode <- function(segments) {
+  vapply(as.character(segments), utils::URLencode, character(1),
+         reserved = TRUE, USE.NAMES = FALSE)
+}
+
+# Build the GET request for clb_get(): base request, encoded path, query.
+clb_get_req <- function(..., query = list(), base_url = clb_base_url()) {
+  segments <- clb_path_encode(unlist(list(...)))
+  req <- clb_request(base_url = base_url)
+  req <- do.call(httr2::req_url_path_append, c(list(req), as.list(segments)))
+  if (length(query)) {
+    req <- httr2::req_url_query(req, !!!query, .multi = "explode")
+  }
+  req
+}
+
 #' Perform a GET request and return parsed JSON
 #'
 #' @param ... Path segments appended to the base URL (each is URL-encoded).
@@ -77,12 +96,7 @@ clb_query <- function(...) {
 #' @keywords internal
 #' @noRd
 clb_get <- function(..., query = list(), base_url = clb_base_url()) {
-  segments <- as.character(unlist(list(...)))
-  req <- clb_request(base_url = base_url)
-  req <- do.call(httr2::req_url_path_append, c(list(req), as.list(segments)))
-  if (length(query)) {
-    req <- httr2::req_url_query(req, !!!query, .multi = "explode")
-  }
+  req <- clb_get_req(..., query = query, base_url = base_url)
   resp <- httr2::req_perform(req)
   httr2::resp_body_json(resp, simplifyVector = FALSE)
 }

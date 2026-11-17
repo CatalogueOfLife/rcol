@@ -13,6 +13,13 @@
   `BE-VLG`), and `reference_citation`, the citation of the distribution's
   reference. `clb_distribution()` looks up each distinct reference once; pass
   `citations = FALSE` to skip that (#6).
+* Ids containing reserved characters such as `/` or `:` are now URL-encoded in
+  request paths. GRIIS checklists use GBIF species URLs as taxon ids, which
+  made `clb_distribution()` and the other taxon functions fail with HTTP 404
+  (#8).
+* `clb_usage()` and `clb_usage_search()` document what `scientific_name`,
+  `authorship` and `label` hold, and the vignette shows how to link a
+  checklist's usages to COL taxon ids with `clb_match_checklist()` (#5).
 
 # rcol 1.0.0
 

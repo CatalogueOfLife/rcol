@@ -174,3 +174,16 @@ test_that("clb_synonymy_to_tibble ignores heterotypicGroups and tags misapplied"
   expect_identical(nrow(clb_synonymy_to_tibble(list())), 0L)
   expect_identical(nrow(clb_synonymy_to_tibble(NULL)), 0L)
 })
+
+test_that("path segments are URL-encoded, reserved characters included (#8)", {
+  req <- clb_get_req(
+    "dataset", "28552", "taxon", "https://www.gbif.org/species/1002621", "distribution",
+    base_url = "https://api.example.org"
+  )
+  expect_identical(
+    req$url,
+    "https://api.example.org/dataset/28552/taxon/https%3A%2F%2Fwww.gbif.org%2Fspecies%2F1002621/distribution"
+  )
+  req <- clb_get_req("dataset", "3LR", "taxon", "4CGXP", base_url = "https://api.example.org")
+  expect_identical(req$url, "https://api.example.org/dataset/3LR/taxon/4CGXP")
+})
