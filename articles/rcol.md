@@ -98,6 +98,27 @@ clb_match("Felis catus", dataset = "COL25")
 clb_match("Bellis perennis", dataset = 2099)
 ```
 
+### Linking a checklist to COL
+
+Usages of any other ChecklistBank dataset, such as a GRIIS country
+checklist, carry that dataset’s own ids. They are not linked to COL
+taxon ids. To get the COL id of each name, match the checklist’s names
+against COL. The usage columns `scientific_name`, `authorship` and
+`rank` feed straight into
+[`col_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/col_shortcuts.md),
+and `usage_id` of the result is the COL taxon id:
+
+``` r
+
+src <- clb_usage_search(dataset = 22856, max = Inf)$data
+m <- col_match_checklist(src, name = "scientific_name")
+m[c("verbatim_id", "verbatim_scientific_name", "match_type", "usage_id")]
+```
+
+`scientific_name` is the name without its authorship, which is in
+`authorship`. `label` combines the two as shown on ChecklistBank. The
+`authorship` and `rank` columns are picked up by their default names.
+
 ## Parsing
 
 The ChecklistBank parsers are exposed too — the scientific name parser

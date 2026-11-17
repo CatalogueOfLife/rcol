@@ -24,6 +24,20 @@
   [`clb_distribution()`](https://catalogueoflife.github.io/rcol/reference/clb_distribution.md)
   looks up each distinct reference once; pass `citations = FALSE` to
   skip that ([\#6](https://github.com/CatalogueOfLife/rcol/issues/6)).
+- Ids containing reserved characters such as `/` or `:` are now
+  URL-encoded in request paths. GRIIS checklists use GBIF species URLs
+  as taxon ids, which made
+  [`clb_distribution()`](https://catalogueoflife.github.io/rcol/reference/clb_distribution.md)
+  and the other taxon functions fail with HTTP 404
+  ([\#8](https://github.com/CatalogueOfLife/rcol/issues/8)).
+- [`clb_usage()`](https://catalogueoflife.github.io/rcol/reference/clb_usage.md)
+  and
+  [`clb_usage_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md)
+  document what `scientific_name`, `authorship` and `label` hold, and
+  the vignette shows how to link a checklist’s usages to COL taxon ids
+  with
+  [`clb_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/clb_match_checklist.md)
+  ([\#5](https://github.com/CatalogueOfLife/rcol/issues/5)).
 
 ## rcol 1.0.0
 

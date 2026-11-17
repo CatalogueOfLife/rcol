@@ -136,13 +136,32 @@ or alias:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Felis catus"</span>, dataset <span class="op">=</span> <span class="st">"COL25"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/clb_match.html">clb_match</a></span><span class="op">(</span><span class="st">"Bellis perennis"</span>, dataset <span class="op">=</span> <span class="fl">2099</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="linking-a-checklist-to-col">Linking a checklist to COL<a class="anchor" aria-label="anchor" href="#linking-a-checklist-to-col"></a>
+</h3>
+<p>Usages of any other ChecklistBank dataset, such as a GRIIS country
+checklist, carry that dataset’s own ids. They are not linked to COL
+taxon ids. To get the COL id of each name, match the checklist’s names
+against COL. The usage columns <code>scientific_name</code>,
+<code>authorship</code> and <code>rank</code> feed straight into
+<code><a href="../reference/col_shortcuts.html">col_match_checklist()</a></code>, and <code>usage_id</code> of the
+result is the COL taxon id:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">src</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clb_usage_search.html">clb_usage_search</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="fl">22856</span>, max <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span><span class="op">$</span><span class="va">data</span></span>
+<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/col_shortcuts.html">col_match_checklist</a></span><span class="op">(</span><span class="va">src</span>, name <span class="op">=</span> <span class="st">"scientific_name"</span><span class="op">)</span></span>
+<span><span class="va">m</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"verbatim_id"</span>, <span class="st">"verbatim_scientific_name"</span>, <span class="st">"match_type"</span>, <span class="st">"usage_id"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
+<p><code>scientific_name</code> is the name without its authorship,
+which is in <code>authorship</code>. <code>label</code> combines the two
+as shown on ChecklistBank. The <code>authorship</code> and
+<code>rank</code> columns are picked up by their default names.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="parsing">Parsing<a class="anchor" aria-label="anchor" href="#parsing"></a>
 </h2>
 <p>The ChecklistBank parsers are exposed too — the scientific name
 parser and all the controlled-value parsers:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_parse_name.html">clb_parse_name</a></span><span class="op">(</span><span class="st">"Abies alba Mill."</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/clb_parsers.html">clb_parsers</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -151,7 +170,7 @@ parser and all the controlled-value parsers:</p>
 <div class="section level2">
 <h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a>
 </h2>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/clb_dataset_search.html">clb_dataset_search</a></span><span class="op">(</span><span class="st">"mammal"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/clb_dataset.html">clb_dataset</a></span><span class="op">(</span><span class="st">"3LXR"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/clb_dataset_metrics.html">clb_dataset_metrics</a></span><span class="op">(</span><span class="st">"COL25"</span><span class="op">)</span></span></code></pre></div>
@@ -161,7 +180,7 @@ parser and all the controlled-value parsers:</p>
 </h2>
 <p>Using the <code>col_*()</code> shortcuts against the latest COL
 release:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look up a usage and its context</span></span>
 <span><span class="fu"><a href="../reference/col_shortcuts.html">col_usage</a></span><span class="op">(</span><span class="st">"4CGXP"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/col_shortcuts.html">col_classification</a></span><span class="op">(</span><span class="st">"4CGXP"</span><span class="op">)</span></span>
@@ -185,7 +204,7 @@ argument, e.g. <code>clb_usage("4CGXP", dataset = "COL25")</code> or
 </h2>
 <p>Set <code>CLB_BASE_URL</code> to target a different ChecklistBank
 deployment, such as the development API:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>CLB_BASE_URL <span class="op">=</span> <span class="st">"https://api.dev.checklistbank.org"</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

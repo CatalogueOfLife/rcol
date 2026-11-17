@@ -37,6 +37,14 @@ synonym (`accepted_id`, `accepted_name`), its provenance (`origin`,
 list-column. Fields that do not apply, such as `scrutinizer` for a
 synonym, are `NA`.
 
+`scientific_name` is the name without its authorship, which is in
+`authorship`; `label` combines both (plus any `name_phrase`) as shown on
+ChecklistBank. The values exactly as the source supplied them are in the
+verbatim record (`verbatim_key`). `id` is the usage id within `dataset`,
+so it is a COL taxon id only for a COL release. For any other dataset,
+match its names to get COL ids, see
+[`clb_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/clb_match_checklist.md).
+
 ## See also
 
 [`clb_usage_search()`](https://catalogueoflife.github.io/rcol/reference/clb_usage_search.md),

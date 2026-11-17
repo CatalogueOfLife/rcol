@@ -72,11 +72,17 @@ and `$meta` (with `total`). Besides the columns described in
 list-columns `secondary_source_keys` and `secondary_source_groups`, and
 `classification`.
 
+Usage ids are those of `dataset`. To link the usages of a checklist to
+COL taxon ids, pass `$data` to
+[`clb_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/clb_match_checklist.md)
+with `name = "scientific_name"`.
+
 ## See also
 
 [`clb_match()`](https://catalogueoflife.github.io/rcol/reference/clb_match.md),
 [`clb_suggest()`](https://catalogueoflife.github.io/rcol/reference/clb_suggest.md),
-[`clb_usage()`](https://catalogueoflife.github.io/rcol/reference/clb_usage.md)
+[`clb_usage()`](https://catalogueoflife.github.io/rcol/reference/clb_usage.md),
+[`clb_match_checklist()`](https://catalogueoflife.github.io/rcol/reference/clb_match_checklist.md)
 
 ## Examples
 

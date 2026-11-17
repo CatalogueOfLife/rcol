@@ -110,10 +110,14 @@ usages) and <code>$meta</code> (with <code>total</code>). Besides the columns de
 <code><a href="clb_usage.html">clb_usage()</a></code>, <code>$data</code> has <code>group</code>, <code>sector_dataset_key</code>,
 <code>sector_publisher_key</code>, the list-columns <code>secondary_source_keys</code> and
 <code>secondary_source_groups</code>, and <code>classification</code>.</p>
+<p>Usage ids are those of <code>dataset</code>. To link the usages of a checklist to
+COL taxon ids, pass <code>$data</code> to <code><a href="clb_match_checklist.html">clb_match_checklist()</a></code> with
+<code>name = "scientific_name"</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="clb_match.html">clb_match()</a></code>, <code><a href="clb_suggest.html">clb_suggest()</a></code>, <code><a href="clb_usage.html">clb_usage()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="clb_match.html">clb_match()</a></code>, <code><a href="clb_suggest.html">clb_suggest()</a></code>, <code><a href="clb_usage.html">clb_usage()</a></code>,
+<code><a href="clb_match_checklist.html">clb_match_checklist()</a></code></p></div>
     </div>
 
     <div class="section level2">

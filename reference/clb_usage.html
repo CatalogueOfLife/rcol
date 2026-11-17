@@ -72,6 +72,12 @@ usage fields (<code>name_phrase</code>, <code>according_to</code>, <code>accordi
 <code>identifier</code>, <code>reference_ids</code> and <code>environments</code>, and the full nested
 <code>name</code> as a list-column. Fields that do not apply, such as <code>scrutinizer</code>
 for a synonym, are <code>NA</code>.</p>
+<p><code>scientific_name</code> is the name without its authorship, which is in
+<code>authorship</code>; <code>label</code> combines both (plus any <code>name_phrase</code>) as shown on
+ChecklistBank. The values exactly as the source supplied them are in the
+verbatim record (<code>verbatim_key</code>). <code>id</code> is the usage id within <code>dataset</code>,
+so it is a COL taxon id only for a COL release. For any other dataset,
+match its names to get COL ids, see <code><a href="clb_match_checklist.html">clb_match_checklist()</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
